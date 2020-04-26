@@ -10,9 +10,17 @@ namespace RVTR.Booking.ObjectModel.Models
   public class StayModel : IValidatableObject
   {
     public int Id { get; set; }
+
+    [Required]
     public DateTime CheckIn { get; set; }
+
+    [Required]
     public DateTime CheckOut { get; set; }
+
+    [Required]
     public DateTime DateCreated { get; set; }
+
+    [Required]
     public DateTime DateModified { get; set; }
 
     /// <summary>

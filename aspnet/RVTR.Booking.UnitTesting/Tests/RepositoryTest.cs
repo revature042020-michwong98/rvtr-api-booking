@@ -5,7 +5,7 @@ using Xunit;
 
 namespace RVTR.Booking.UnitTesting.Tests
 {
-  public class Repository_Test
+  public class RepositoryTest
   {
     private readonly Repository<object> _sut = new Repository<object>();
     public static readonly IEnumerable<object[]> _objects = new List<object[]>

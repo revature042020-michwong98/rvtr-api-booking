@@ -4,7 +4,7 @@ using Xunit;
 
 namespace RVTR.Booking.UnitTesting.Tests
 {
-  public class UnitOfWork_Test
+  public class UnitOfWorkTest
   {
     [Fact]
     public void Test_CommitMethod()

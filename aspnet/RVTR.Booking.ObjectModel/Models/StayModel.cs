@@ -1,34 +1,30 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RVTR.Booking.ObjectModel.Models
 {
   /// <summary>
-  /// Represents the _Booking_ model
+  /// Represents the _Stay_ model
   /// </summary>
-  public class BookingModel : IValidatableObject
+  public class StayModel : IValidatableObject
   {
     public int Id { get; set; }
 
     [Required]
-    public int AccountId { get; set; }
+    public DateTime CheckIn { get; set; }
 
     [Required]
-    public int LodgingId { get; set; }
+    public DateTime CheckOut { get; set; }
 
     [Required]
-    public IEnumerable<int> Guests { get; set; }
+    public DateTime DateCreated { get; set; }
 
     [Required]
-    public IEnumerable<int> Rentals { get; set; }
-
-    [Required]
-    public string Status { get; set; }
-
-    public StayModel Stay { get; set; }
+    public DateTime DateModified { get; set; }
 
     /// <summary>
-    /// Represents the _Booking_ `Validate` method
+    /// Represents the _Stay_ `Validate` method
     /// </summary>
     /// <param name="validationContext"></param>
     /// <returns></returns>

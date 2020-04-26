@@ -3,8 +3,24 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RVTR.Booking.ObjectModel.Models
 {
+  /// <summary>
+  /// Represents the _Booking_ model
+  /// </summary>
   public class BookingModel : IValidatableObject
   {
-    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => throw new System.NotImplementedException();
+    public int Id { get; set; }
+    public int AccountId { get; set; }
+    public int LodgingId { get; set; }
+    public IEnumerable<int> Guests { get; set; }
+    public IEnumerable<int> Rentals { get; set; }
+    public StayModel Stay { get; set; }
+    public string Status { get; set; }
+
+    /// <summary>
+    /// Represents the _Booking_ `Validate` method
+    /// </summary>
+    /// <param name="validationContext"></param>
+    /// <returns></returns>
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => new List<ValidationResult>();
   }
 }

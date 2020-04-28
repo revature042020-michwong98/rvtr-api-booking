@@ -11,9 +11,9 @@ namespace RVTR.Booking.WebRpc
   public class BookingService : Booking.BookingBase
   {
     private readonly ILogger<BookingService> _logger;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly UnitOfWork _unitOfWork;
 
-    public BookingService(ILogger<BookingService> logger, IUnitOfWork unitOfWork)
+    public BookingService(ILogger<BookingService> logger, UnitOfWork unitOfWork)
     {
       _logger = logger;
       _unitOfWork = unitOfWork;

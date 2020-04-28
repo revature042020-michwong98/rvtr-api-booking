@@ -2,7 +2,7 @@
 
 namespace RVTR.Booking.DataContext.Repositories
 {
-  public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+  public class Repository<TEntity> where TEntity : class
   {
     public bool Delete(int id) => throw new System.NotImplementedException();
 

@@ -14,9 +14,9 @@ namespace RVTR.Booking.ObjectModel.Models
 
     public int LodgingId { get; set; }
 
-    public IEnumerable<int> Guests { get; set; }
+    public IEnumerable<GuestModel> Guests { get; set; }
 
-    public IEnumerable<int> Rentals { get; set; }
+    public IEnumerable<RentalModel> Rentals { get; set; }
 
     public string Status { get; set; }
 

@@ -11,17 +11,17 @@ namespace RVTR.Booking.ObjectModel.Models
   {
     public int Id { get; set; }
 
-    [Required]
     public DateTime CheckIn { get; set; }
 
-    [Required]
     public DateTime CheckOut { get; set; }
 
-    [Required]
     public DateTime DateCreated { get; set; }
 
-    [Required]
     public DateTime DateModified { get; set; }
+
+    public int BookingId { get; set; }
+
+    public BookingModel Booking { get; set; }
 
     /// <summary>
     /// Represents the _Stay_ `Validate` method

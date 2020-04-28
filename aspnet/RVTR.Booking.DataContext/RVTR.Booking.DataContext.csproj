@@ -9,14 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RVTR.Booking.ObjectModel\RVTR.Booking.ObjectModel.csproj" />
+    <PackageReference Include="npgsql.entityframeworkcore.postgresql" Version="3.1.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="microsoft.entityframeworkcore.design" Version="3.1.3">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <ProjectReference Include="..\RVTR.Booking.ObjectModel\RVTR.Booking.ObjectModel.csproj" />
   </ItemGroup>
 
 </Project>

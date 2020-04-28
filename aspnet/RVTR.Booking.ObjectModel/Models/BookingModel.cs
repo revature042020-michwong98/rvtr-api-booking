@@ -10,19 +10,14 @@ namespace RVTR.Booking.ObjectModel.Models
   {
     public int Id { get; set; }
 
-    [Required]
     public int AccountId { get; set; }
 
-    [Required]
     public int LodgingId { get; set; }
 
-    [Required]
     public IEnumerable<int> Guests { get; set; }
 
-    [Required]
     public IEnumerable<int> Rentals { get; set; }
 
-    [Required]
     public string Status { get; set; }
 
     public StayModel Stay { get; set; }

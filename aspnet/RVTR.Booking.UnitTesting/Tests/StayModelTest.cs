@@ -18,7 +18,9 @@ namespace RVTR.Booking.UnitTesting.Tests
           CheckIn = DateTime.Now,
           CheckOut = DateTime.Now,
           DateCreated = DateTime.Now,
-          DateModified = DateTime.Now
+          DateModified = DateTime.Now,
+          BookingId = 0,
+          Booking = null
         }
       }
     };

@@ -23,7 +23,7 @@ namespace RVTR.Booking.UnitTesting.Tests
     {
       var actual = await unitOfWork.CommitAsync();
 
-      Assert.True(actual >= 0);
+      Assert.Equal(0, actual);
     }
   }
 }

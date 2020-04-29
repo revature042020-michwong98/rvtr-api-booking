@@ -1,66 +1,142 @@
-using System;
 using System.Collections.Generic;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using RVTR.Booking.DataContext;
 using RVTR.Booking.DataContext.Repositories;
+using RVTR.Booking.ObjectModel.Models;
 using Xunit;
 
 namespace RVTR.Booking.UnitTesting.Tests
 {
   public class RepositoryTest
   {
-    private readonly Repository<object> _sut = new Repository<object>();
-    public static readonly IEnumerable<object[]> _objects = new List<object[]>
+    private static readonly SqliteConnection _connection = new SqliteConnection("Data Source=:memory:");
+    private static readonly DbContextOptions<BookingContext> _options = new DbContextOptionsBuilder<BookingContext>().UseSqlite(_connection).Options;
+
+    public static readonly IEnumerable<object[]> _records = new List<object[]>()
     {
-      new object[] { new object() },
-      new object[] { new object() },
-      new object[] { new object() }
+      new object[]
+      {
+        new BookingModel() { Id = 1 },
+        new StayModel() { Id = 1 }
+      }
     };
 
     [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    [InlineData(3)]
-    public void Test_Delete(int id)
+    [MemberData(nameof(_records))]
+    public async void Test_Repository_DeleteAsync(BookingModel booking, StayModel stay)
     {
-      Func<bool> actual = () => { return _sut.Delete(id); };
+      await _connection.OpenAsync();
 
-      Assert.IsType<Func<bool>>(actual);
+      try
+      {
+        using (var ctx = new BookingContext(_options))
+        {
+          await ctx.Database.EnsureCreatedAsync();
+          await ctx.Bookings.AddAsync(booking);
+          await ctx.Stays.AddAsync(stay);
+          await ctx.SaveChangesAsync();
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var bookings = new Repository<BookingModel>(ctx);
+
+          await bookings.DeleteAsync(1);
+          await ctx.SaveChangesAsync();
+
+          Assert.Empty(await ctx.Bookings.ToListAsync());
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var stays = new Repository<StayModel>(ctx);
+
+          await stays.DeleteAsync(1);
+          await ctx.SaveChangesAsync();
+
+          Assert.Empty(await ctx.Stays.ToListAsync());
+        }
+      }
+      finally
+      {
+        _connection.Close();
+      }
     }
 
     [Theory]
-    [MemberData(nameof(_objects))]
-    public void Test_Insert(object entity)
+    [MemberData(nameof(_records))]
+    public async void Test_Repository_InsertAsync(BookingModel booking, StayModel stay)
     {
-      Func<bool> actual = () => { return _sut.Insert(entity); };
+      await _connection.OpenAsync();
 
-      Assert.IsType<Func<bool>>(actual);
+      try
+      {
+        using (var ctx = new BookingContext(_options))
+        {
+          await ctx.Database.EnsureCreatedAsync();
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var bookings = new Repository<BookingModel>(ctx);
+
+          await bookings.InsertAsync(booking);
+          await ctx.SaveChangesAsync();
+
+          Assert.NotEmpty(await ctx.Bookings.ToListAsync());
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var stays = new Repository<StayModel>(ctx);
+
+          await stays.InsertAsync(stay);
+          await ctx.SaveChangesAsync();
+
+          Assert.NotEmpty(await ctx.Stays.ToListAsync());
+        }
+      }
+      finally
+      {
+        _connection.Close();
+      }
     }
 
     [Fact]
-    public void Test_Select()
+    public async void Test_Repository_SelectAsync()
     {
-      Func<IEnumerable<object>> actual = () => { return _sut.Select(); };
+      await _connection.OpenAsync();
 
-      Assert.IsType<Func<IEnumerable<object>>>(actual);
-    }
+      try
+      {
+        using (var ctx = new BookingContext(_options))
+        {
+          await ctx.Database.EnsureCreatedAsync();
+        }
 
-    [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    [InlineData(3)]
-    public void Test_SelectOne(int id)
-    {
-      Func<object> actual = () => { return _sut.Select(id); };
+        using (var ctx = new BookingContext(_options))
+        {
+          var bookings = new Repository<BookingModel>(ctx);
 
-      Assert.IsType<Func<object>>(actual);
-    }
+          var actual = await bookings.SelectAsync();
 
-    [Theory]
-    [MemberData(nameof(_objects))]
-    public void Test_Update(object entity)
-    {
-      Func<bool> actual = () => { return _sut.Insert(entity); };
+          Assert.Empty(await ctx.Bookings.ToListAsync());
+        }
 
-      Assert.IsType<Func<bool>>(actual);
+        using (var ctx = new BookingContext(_options))
+        {
+          var stays = new Repository<StayModel>(ctx);
+
+          var actual = await stays.SelectAsync();
+
+          Assert.Empty(actual);
+        }
+      }
+      finally
+      {
+        _connection.Close();
+      }
     }
   }
 }

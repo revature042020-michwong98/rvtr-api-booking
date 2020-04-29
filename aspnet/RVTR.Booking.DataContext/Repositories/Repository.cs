@@ -1,17 +1,30 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace RVTR.Booking.DataContext.Repositories
 {
+  /// <summary>
+  /// Represents the _Repository_ generic
+  /// </summary>
+  /// <typeparam name="TEntity"></typeparam>
   public class Repository<TEntity> where TEntity : class
   {
-    public bool Delete(int id) => throw new System.NotImplementedException();
+    public readonly DbSet<TEntity> _db;
 
-    public bool Insert(TEntity entity) => throw new System.NotImplementedException();
+    public Repository(BookingContext context)
+    {
+      _db = context.Set<TEntity>();
+    }
 
-    public IEnumerable<TEntity> Select() => throw new System.NotImplementedException();
+    public async Task DeleteAsync(int id) => _db.Remove(await SelectAsync(id));
 
-    public TEntity Select(int id) => throw new System.NotImplementedException();
+    public async Task InsertAsync(TEntity entry) => await _db.AddAsync(entry).ConfigureAwait(true);
 
-    public bool Update(TEntity entity) => throw new System.NotImplementedException();
+    public async Task<IEnumerable<TEntity>> SelectAsync() => await _db.ToListAsync();
+
+    public async Task<TEntity> SelectAsync(int id) => await _db.FindAsync(id).ConfigureAwait(true);
+
+    public void Update(TEntity entry) => _db.Update(entry);
   }
 }

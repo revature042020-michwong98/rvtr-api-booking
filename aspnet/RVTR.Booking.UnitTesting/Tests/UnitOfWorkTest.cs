@@ -11,19 +11,33 @@ namespace RVTR.Booking.UnitTesting.Tests
   {
     private static readonly SqliteConnection _connection = new SqliteConnection("Data Source=:memory:");
     private static readonly DbContextOptions<BookingContext> _options = new DbContextOptionsBuilder<BookingContext>().UseSqlite(_connection).Options;
-    private static readonly BookingContext _context = new BookingContext(_options);
-    public static readonly IEnumerable<object[]> _unitOfWorks = new List<object[]>
-    {
-      new object[] { new UnitOfWork(_context) }
-    };
 
-    [Theory]
-    [MemberData(nameof(_unitOfWorks))]
-    public async void Test_UnitOfWork_CommitAsync(UnitOfWork unitOfWork)
+    [Fact]
+    public async void Test_UnitOfWork_CommitAsync()
     {
-      var actual = await unitOfWork.CommitAsync();
+      await _connection.OpenAsync();
 
-      Assert.Equal(0, actual);
+      try
+      {
+        using (var ctx = new BookingContext(_options))
+        {
+          await ctx.Database.EnsureCreatedAsync();
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var unitOfWork = new UnitOfWork(ctx);
+          var actual = await unitOfWork.CommitAsync();
+
+          Assert.NotNull(unitOfWork.Booking);
+          Assert.NotNull(unitOfWork.Stay);
+          Assert.Equal(0, actual);
+        }
+      }
+      finally
+      {
+        await _connection.CloseAsync();
+      }
     }
   }
 }

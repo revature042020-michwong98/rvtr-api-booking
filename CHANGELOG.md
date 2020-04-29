@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning][semver].
 - setup the project webapi and webrpc scaffolding
 - configure the project build definition
 - design and launch the object model
+- design and launch the database context
 
 [changelog]: https://keepachangelog.com/en/1.0.0/ 'keep a changelog'
 [semver]: https://semver.org/spec/v2.0.0.html 'semantic versioning'

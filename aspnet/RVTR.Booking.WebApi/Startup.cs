@@ -37,7 +37,7 @@ namespace RVTR.Booking.WebApi
         });
       });
 
-      services.AddScoped<IUnitOfWork, UnitOfWork>();
+      services.AddScoped<UnitOfWork>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,4 +1,7 @@
-using System;
+using System.Collections.Generic;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using RVTR.Booking.DataContext;
 using RVTR.Booking.DataContext.Repositories;
 using Xunit;
 
@@ -6,14 +9,35 @@ namespace RVTR.Booking.UnitTesting.Tests
 {
   public class UnitOfWorkTest
   {
+    private static readonly SqliteConnection _connection = new SqliteConnection("Data Source=:memory:");
+    private static readonly DbContextOptions<BookingContext> _options = new DbContextOptionsBuilder<BookingContext>().UseSqlite(_connection).Options;
+
     [Fact]
-    public void Test_CommitMethod()
+    public async void Test_UnitOfWork_CommitAsync()
     {
-      var sut = new UnitOfWork();
+      await _connection.OpenAsync();
 
-      Action actual = () => sut.Commit();
+      try
+      {
+        using (var ctx = new BookingContext(_options))
+        {
+          await ctx.Database.EnsureCreatedAsync();
+        }
 
-      Assert.IsType<Action>(actual);
+        using (var ctx = new BookingContext(_options))
+        {
+          var unitOfWork = new UnitOfWork(ctx);
+          var actual = await unitOfWork.CommitAsync();
+
+          Assert.NotNull(unitOfWork.Booking);
+          Assert.NotNull(unitOfWork.Stay);
+          Assert.Equal(0, actual);
+        }
+      }
+      finally
+      {
+        await _connection.CloseAsync();
+      }
     }
   }
 }

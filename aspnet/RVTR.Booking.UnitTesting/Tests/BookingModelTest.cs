@@ -17,8 +17,8 @@ namespace RVTR.Booking.UnitTesting.Tests
           Id = 0,
           AccountId = 0,
           LodgingId = 0,
-          Guests = new List<int>(),
-          Rentals = new List<int>(),
+          Guests = new List<GuestModel>(),
+          Rentals = new List<RentalModel>(),
           Status = "status",
           Stay = new StayModel()
         }

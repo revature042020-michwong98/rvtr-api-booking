@@ -16,7 +16,7 @@ namespace RVTR.Booking.WebRpc
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddGrpc();
-      services.AddScoped<IUnitOfWork, UnitOfWork>();
+      services.AddScoped<UnitOfWork>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

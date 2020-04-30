@@ -26,7 +26,7 @@ namespace RVTR.Booking.WebApi.Controllers
     {
       try
       {
-        await _unitOfWork.Booking.DeleteAsync(id);
+        await _unitOfWork.Stay.DeleteAsync(id);
         await _unitOfWork.CommitAsync();
 
         return Ok();
@@ -40,7 +40,7 @@ namespace RVTR.Booking.WebApi.Controllers
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-      return Ok(await _unitOfWork.Booking.SelectAsync());
+      return Ok(await _unitOfWork.Stay.SelectAsync());
     }
 
     [HttpGet("{id")]
@@ -48,7 +48,7 @@ namespace RVTR.Booking.WebApi.Controllers
     {
       try
       {
-        return Ok(await _unitOfWork.Booking.SelectAsync(id));
+        return Ok(await _unitOfWork.Stay.SelectAsync(id));
       }
       catch
       {

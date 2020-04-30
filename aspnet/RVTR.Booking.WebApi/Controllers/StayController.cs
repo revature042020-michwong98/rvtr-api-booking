@@ -10,12 +10,12 @@ namespace RVTR.Booking.WebApi.Controllers
   [ApiController]
   [EnableCors()]
   [Route("api/[controller]")]
-  public class BookingController : ControllerBase
+  public class StayController : ControllerBase
   {
-    private readonly ILogger<BookingController> _logger;
+    private readonly ILogger<StayController> _logger;
     private readonly UnitOfWork _unitOfWork;
 
-    public BookingController(ILogger<BookingController> logger, UnitOfWork unitOfWork)
+    public StayController(ILogger<StayController> logger, UnitOfWork unitOfWork)
     {
       _logger = logger;
       _unitOfWork = unitOfWork;
@@ -26,7 +26,7 @@ namespace RVTR.Booking.WebApi.Controllers
     {
       try
       {
-        await _unitOfWork.Booking.DeleteAsync(id);
+        await _unitOfWork.Stay.DeleteAsync(id);
         await _unitOfWork.CommitAsync();
 
         return Ok();
@@ -40,7 +40,7 @@ namespace RVTR.Booking.WebApi.Controllers
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-      return Ok(await _unitOfWork.Booking.SelectAsync());
+      return Ok(await _unitOfWork.Stay.SelectAsync());
     }
 
     [HttpGet("{id")]
@@ -48,7 +48,7 @@ namespace RVTR.Booking.WebApi.Controllers
     {
       try
       {
-        return Ok(await _unitOfWork.Booking.SelectAsync(id));
+        return Ok(await _unitOfWork.Stay.SelectAsync(id));
       }
       catch
       {
@@ -57,21 +57,21 @@ namespace RVTR.Booking.WebApi.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(BookingModel booking)
+    public async Task<IActionResult> Post(StayModel stay)
     {
-      await _unitOfWork.Booking.InsertAsync(booking);
+      await _unitOfWork.Stay.InsertAsync(stay);
       await _unitOfWork.CommitAsync();
 
-      return Accepted(booking);
+      return Accepted(stay);
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put(BookingModel booking)
+    public async Task<IActionResult> Put(StayModel stay)
     {
-      _unitOfWork.Booking.Update(booking);
+      _unitOfWork.Stay.Update(stay);
       await _unitOfWork.CommitAsync();
 
-      return Accepted(booking);
+      return Accepted(stay);
     }
   }
 }

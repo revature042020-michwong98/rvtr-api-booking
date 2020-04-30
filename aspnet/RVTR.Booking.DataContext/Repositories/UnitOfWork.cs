@@ -10,8 +10,8 @@ namespace RVTR.Booking.DataContext.Repositories
   {
     private readonly BookingContext _context;
 
-    public Repository<BookingModel> Booking { get; }
-    public Repository<StayModel> Stay { get; }
+    public virtual Repository<BookingModel> Booking { get; }
+    public virtual Repository<StayModel> Stay { get; }
 
     public UnitOfWork(BookingContext context)
     {

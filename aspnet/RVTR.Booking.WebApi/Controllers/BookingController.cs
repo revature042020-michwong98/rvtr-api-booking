@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +9,7 @@ namespace RVTR.Booking.WebApi.Controllers
 {
   [ApiController]
   [EnableCors()]
-  [Route("[controller]")]
+  [Route("api/[controller]")]
   public class BookingController : ControllerBase
   {
     private readonly ILogger<BookingController> _logger;
@@ -24,10 +21,57 @@ namespace RVTR.Booking.WebApi.Controllers
       _unitOfWork = unitOfWork;
     }
 
-    [HttpGet]
-    public async Task<BookingModel> Get()
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
     {
-      return await Task.FromResult<BookingModel>(new BookingModel());
+      try
+      {
+        await _unitOfWork.Booking.DeleteAsync(id);
+        await _unitOfWork.CommitAsync();
+
+        return Ok();
+      }
+      catch
+      {
+        return NotFound(id);
+      }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+      return Ok(await _unitOfWork.Booking.SelectAsync());
+    }
+
+    [HttpGet("{id")]
+    public async Task<IActionResult> Get(int id)
+    {
+      try
+      {
+        return Ok(await _unitOfWork.Booking.SelectAsync(id));
+      }
+      catch
+      {
+        return NotFound(id);
+      }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Post(BookingModel booking)
+    {
+      await _unitOfWork.Booking.InsertAsync(booking);
+      await _unitOfWork.CommitAsync();
+
+      return Accepted(booking);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> Put(BookingModel booking)
+    {
+      _unitOfWork.Booking.Update(booking);
+      await _unitOfWork.CommitAsync();
+
+      return Accepted(booking);
     }
   }
 }

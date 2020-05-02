@@ -3,18 +3,22 @@
   <PropertyGroup>
     <DebugType>Full</DebugType>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RestoreLockedMode>true</RestoreLockedMode>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RVTR.Booking.ObjectModel\RVTR.Booking.ObjectModel.csproj" />
-    <ProjectReference Include="..\RVTR.Booking.DataContext\RVTR.Booking.DataContext.csproj" />
+    <PackageReference Include="microsoft.aspnetcore.mvc.versioning" Version="4.1.1" />
+    <PackageReference Include="microsoft.aspnetcore.mvc.versioning.apiexplorer" Version="4.1.1" />
+    <PackageReference Include="npgsql.entityframeworkcore.postgresql" Version="3.1.3" />
+    <PackageReference Include="swashbuckle.aspnetcore" Version="5.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="npgsql.entityframeworkcore.postgresql" Version="3.1.3" />
+    <ProjectReference Include="..\RVTR.Booking.ObjectModel\RVTR.Booking.ObjectModel.csproj" />
+    <ProjectReference Include="..\RVTR.Booking.DataContext\RVTR.Booking.DataContext.csproj" />
   </ItemGroup>
 
 </Project>

@@ -38,11 +38,19 @@ namespace RVTR.Booking.WebApi
       services.AddControllers();
       services.AddCors(options =>
       {
-        options.AddPolicy("Public", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+        options.AddPolicy("Public", policy =>
+        {
+          policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+        });
       });
 
-      services.AddDbContext<BookingContext>(options => options.UseNpgsql(Configuration.GetConnectionString("pgsql")));
+      services.AddDbContext<BookingContext>(options =>
+      {
+        options.UseNpgsql(Configuration.GetConnectionString("pgsql"));
+      });
+
       services.AddScoped<UnitOfWork>();
+      services.AddSwaggerGen();
     }
 
     /// <summary>
@@ -59,6 +67,8 @@ namespace RVTR.Booking.WebApi
 
       app.UseHttpsRedirection();
       app.UseRouting();
+      app.UseSwagger();
+      app.UseSwaggerUI();
       app.UseCors();
       app.UseAuthorization();
 

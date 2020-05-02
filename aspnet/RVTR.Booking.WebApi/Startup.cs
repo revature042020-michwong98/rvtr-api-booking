@@ -35,11 +35,9 @@ namespace RVTR.Booking.WebApi
     {
       services.AddControllers();
 
-      services.AddCors(cors =>
+      services.AddCors(options =>
       {
-        cors.DefaultPolicyName = "default";
-
-        cors.AddDefaultPolicy(policy =>
+        options.AddPolicy("Public", policy =>
         {
           policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
         });
@@ -62,6 +60,7 @@ namespace RVTR.Booking.WebApi
 
       app.UseHttpsRedirection();
       app.UseRouting();
+      app.UseCors();
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>

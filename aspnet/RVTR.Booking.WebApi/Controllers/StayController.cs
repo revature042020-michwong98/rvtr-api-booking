@@ -11,7 +11,7 @@ namespace RVTR.Booking.WebApi.Controllers
   ///
   /// </summary>
   [ApiController]
-  [EnableCors()]
+  [EnableCors("Public")]
   [Route("api/[controller]")]
   public class StayController : ControllerBase
   {

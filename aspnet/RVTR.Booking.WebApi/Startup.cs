@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using RVTR.Booking.DataContext;
 using RVTR.Booking.DataContext.Repositories;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace RVTR.Booking.WebApi
 {
@@ -56,6 +59,7 @@ namespace RVTR.Booking.WebApi
 
       services.AddScoped<UnitOfWork>();
       services.AddSwaggerGen();
+      services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
       services.AddVersionedApiExplorer(options =>
       {
         options.GroupNameFormat = "'v'V";
@@ -68,7 +72,8 @@ namespace RVTR.Booking.WebApi
     /// </summary>
     /// <param name="app"></param>
     /// <param name="env"></param>
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    /// <param name="provider"></param>
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
     {
       if (env.IsDevelopment())
       {
@@ -78,7 +83,13 @@ namespace RVTR.Booking.WebApi
       app.UseHttpsRedirection();
       app.UseRouting();
       app.UseSwagger();
-      app.UseSwaggerUI();
+      app.UseSwaggerUI(options =>
+      {
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+          options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
+        }
+      });
       app.UseCors();
       app.UseAuthorization();
 

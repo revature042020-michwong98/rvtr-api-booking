@@ -51,7 +51,6 @@ jobs:
           -p:CollectCoverage=true \
           -p:CoverletOutput=../code_coverage/ \
           -p:CoverletOutputFormat=opencover \
-          -p:Exclude='[RVTR.Booking.WebApi]RVTR.Booking.WebApi.*' \
           --logger trx \
           --results-directory ./test_coverage/
         working-directory: ${{ env.WORKING_DIRECTORY }}

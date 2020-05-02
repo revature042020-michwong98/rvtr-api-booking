@@ -66,7 +66,7 @@ namespace RVTR.Booking.WebApi.Controllers
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpGet("{id")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
       try

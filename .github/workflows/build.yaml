@@ -46,7 +46,13 @@ jobs:
           path: ~/.nuget/packages
           key: aspnet-${{ hashFiles('**/packages.lock.json') }}
       - name: dotnet_test
-        run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=../code_coverage/ -p:CoverletOutputFormat=opencover --logger trx --results-directory ./test_coverage/
+        run: |
+          dotnet test \
+          -p:CollectCoverage=true \
+          -p:CoverletOutput=../code_coverage/ \
+          -p:CoverletOutputFormat=opencover \
+          --logger trx \
+          --results-directory ./test_coverage/
         working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: opencover_upload
         uses: actions/upload-artifact@v1.0.0

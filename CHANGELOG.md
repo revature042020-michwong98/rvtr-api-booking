@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning][semver].
 
 ## [unreleased]
 
+### added
+
+- design and document the project api specification
+
 ## [0.0.0] :: 2020-04-30
 
 ### added

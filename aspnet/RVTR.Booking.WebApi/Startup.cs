@@ -35,6 +35,11 @@ namespace RVTR.Booking.WebApi
     /// <param name="services"></param>
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddApiVersioning(options =>
+      {
+        options.ReportApiVersions = true;
+      });
+
       services.AddControllers();
       services.AddCors(options =>
       {
@@ -51,6 +56,11 @@ namespace RVTR.Booking.WebApi
 
       services.AddScoped<UnitOfWork>();
       services.AddSwaggerGen();
+      services.AddVersionedApiExplorer(options =>
+      {
+        options.GroupNameFormat = "'v'V";
+        options.SubstituteApiVersionInUrl = true;
+      });
     }
 
     /// <summary>

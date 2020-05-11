@@ -120,12 +120,28 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
   pack:
-    name: pack_job
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+    if: github.event_name == 'pull_request'
+    name: pack_aspnet
     needs: [analyze]
     runs-on: ubuntu-18.04
     steps:
-      - name: pack_script
-        run: echo 'pack script'
+      - name: actions_checkout
+        uses: actions/checkout@v2.1.0
+      - name: drop_download
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: drop
+      - name: docker_login
+        run: echo ${GITHUB_TOKEN} | docker login --username ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
+      - name: docker_build
+        run: docker image build --file .docker/aspnet.dockerfile --tag docker.pkg.github.com/rvtr/rvtr-api-lodging/rest:aspnet-pr${PULL_REQUEST_NUMBER} drop
+      - name: docker_push
+        run: docker image push docker.pkg.github.com/rvtr/rvtr-api-lodging/rest:aspnet-pr${PULL_REQUEST_NUMBER}
+      - name: docker_logout
+        run: docker logout
 
 name: build
 

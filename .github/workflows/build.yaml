@@ -137,9 +137,9 @@ jobs:
       - name: docker_login
         run: echo ${GITHUB_TOKEN} | docker login --username ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
       - name: docker_build
-        run: docker image build --file .docker/aspnet.dockerfile --tag docker.pkg.github.com/rvtr/rvtr-api-booking/rest:aspnet-pr${PULL_REQUEST_NUMBER} drop
+        run: docker image build --file .docker/aspnet.dockerfile --tag docker.pkg.github.com/rvtr/rvtr-api-booking/booking-rest:aspnet-pr${PULL_REQUEST_NUMBER} drop
       - name: docker_push
-        run: docker image push docker.pkg.github.com/rvtr/rvtr-api-booking/rest:aspnet-pr${PULL_REQUEST_NUMBER}
+        run: docker image push docker.pkg.github.com/rvtr/rvtr-api-booking/booking-rest:aspnet-pr${PULL_REQUEST_NUMBER}
       - name: docker_logout
         run: docker logout
 

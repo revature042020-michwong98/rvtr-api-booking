@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning][semver].
 ### added
 
 - design and document the project api specification
+- configure the project to support containerization
 
 ## [0.0.0] :: 2020-04-30
 

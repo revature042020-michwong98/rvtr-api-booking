@@ -33,11 +33,11 @@ jobs:
       - name: dotnet_build
         run: dotnet build
         working-directory: ${{ env.WORKING_DIRECTORY }}
-      - if: github.event_name == 'pull_request'
+      - if: github.event_name == 'push'
         name: dotnet_publish
         run: dotnet publish --no-build --output drop RVTR.Booking.WebApi/*.csproj
         working-directory: ${{ env.WORKING_DIRECTORY }}
-      - if: github.event_name == 'pull_request'
+      - if: github.event_name == 'push'
         name: drop_upload
         uses: actions/upload-artifact@v1.0.0
         with:
@@ -122,8 +122,7 @@ jobs:
   pack:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'push'
     name: pack_aspnet
     needs: [analyze]
     runs-on: ubuntu-18.04
@@ -137,9 +136,9 @@ jobs:
       - name: docker_login
         run: echo ${GITHUB_TOKEN} | docker login --username ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
       - name: docker_build
-        run: docker image build --file .docker/aspnet.dockerfile --tag docker.pkg.github.com/rvtr/rvtr-api-booking/booking:aspnet-rest-pr${PULL_REQUEST_NUMBER} drop
+        run: docker image build --file .docker/aspnet.dockerfile --tag docker.pkg.github.com/rvtr/rvtr-api-booking/booking:aspnet-rest drop
       - name: docker_push
-        run: docker image push docker.pkg.github.com/rvtr/rvtr-api-booking/booking:aspnet-rest-pr${PULL_REQUEST_NUMBER}
+        run: docker image push docker.pkg.github.com/rvtr/rvtr-api-booking/booking:aspnet-rest
       - name: docker_logout
         run: docker logout
 

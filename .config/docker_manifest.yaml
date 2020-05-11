@@ -1,0 +1,25 @@
+networks:
+  locally:
+
+services:
+  rest:
+    build:
+      context: ../aspnet
+      dockerfile: ../.docker/aspnet_local.dockerfile
+    depends_on:
+      - data
+    environment:
+      ConnectionStrings__pgsql: 'Host=data;Database=BookingDb;Username=postgres;Password=BookingApi@2020;'
+    networks:
+      - locally
+    ports:
+      - 8000:80
+
+  data:
+    environment:
+      POSTGRES_PASSWORD: BookingApi@2020
+    image: postgres:12
+    networks:
+      - locally
+
+version: '3.8'

@@ -1,4 +1,5 @@
 env:
+  CACHE_KEY_NAME: aspnet-booking
   WORKING_DIRECTORY: aspnet
 
 jobs:
@@ -12,7 +13,7 @@ jobs:
         uses: actions/cache@v1.1.2
         with:
           path: ~/.nuget/packages
-          key: aspnet-${{ hashFiles('**/packages.lock.json') }}
+          key: ${{ env.CACHE_KEY_NAME }}-${{ hashFiles('**/packages.lock.json') }}
       - name: dotnet_restore
         run: dotnet restore
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -28,10 +29,20 @@ jobs:
         uses: actions/cache@v1.1.2
         with:
           path: ~/.nuget/packages
-          key: aspnet-${{ hashFiles('**/packages.lock.json') }}
+          key: ${{ env.CACHE_KEY_NAME }}-${{ hashFiles('**/packages.lock.json') }}
       - name: dotnet_build
         run: dotnet build
         working-directory: ${{ env.WORKING_DIRECTORY }}
+      - if: github.event_name == 'push'
+        name: dotnet_publish
+        run: dotnet publish --no-build --output drop RVTR.Booking.WebApi/*.csproj
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      - if: github.event_name == 'push'
+        name: drop_upload
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: drop
+          path: ${{ env.WORKING_DIRECTORY }}/drop
 
   test:
     name: test_aspnet
@@ -44,7 +55,7 @@ jobs:
         uses: actions/cache@v1.1.2
         with:
           path: ~/.nuget/packages
-          key: aspnet-${{ hashFiles('**/packages.lock.json') }}
+          key: ${{ env.CACHE_KEY_NAME }}-${{ hashFiles('**/packages.lock.json') }}
       - name: dotnet_test
         run: |
           dotnet test \
@@ -90,7 +101,7 @@ jobs:
         uses: actions/cache@v1.1.2
         with:
           path: ~/.nuget/packages
-          key: aspnet-${{ hashFiles('**/packages.lock.json') }}
+          key: ${{ env.CACHE_KEY_NAME }}-${{ hashFiles('**/packages.lock.json') }}
       - if: github.event_name == 'pull_request'
         name: sonar_scan_pull_request
         run: |
@@ -109,12 +120,27 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
   pack:
-    name: pack_job
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    if: github.event_name == 'push'
+    name: pack_aspnet
     needs: [analyze]
     runs-on: ubuntu-18.04
     steps:
-      - name: pack_script
-        run: echo 'pack script'
+      - name: actions_checkout
+        uses: actions/checkout@v2.1.0
+      - name: drop_download
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: drop
+      - name: docker_login
+        run: echo ${GITHUB_TOKEN} | docker login --username ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
+      - name: docker_build
+        run: docker image build --file .docker/aspnet.dockerfile --tag docker.pkg.github.com/rvtr/rvtr-api-booking/booking:aspnet-rest drop
+      - name: docker_push
+        run: docker image push docker.pkg.github.com/rvtr/rvtr-api-booking/booking:aspnet-rest
+      - name: docker_logout
+        run: docker logout
 
 name: build
 

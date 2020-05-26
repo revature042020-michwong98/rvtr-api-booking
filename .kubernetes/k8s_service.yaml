@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booking
+spec:
+  ports:
+    - name: booking
+      port: 80
+      targetPort: booking-http
+  selector:
+    app: booking
+  type: ClusterIP

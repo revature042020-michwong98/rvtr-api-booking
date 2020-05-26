@@ -9,7 +9,7 @@ services:
     depends_on:
       - data
     environment:
-      ConnectionStrings__pgsql: 'Host=data;Database=BookingDb;Username=postgres;Password=BookingApi@2020;'
+      ConnectionStrings__pgsql: 'Host=data;Database=BookingData;Username=postgres;Password=BookingData@2020;'
     networks:
       - locally
     ports:
@@ -17,7 +17,7 @@ services:
 
   data:
     environment:
-      POSTGRES_PASSWORD: BookingApi@2020
+      POSTGRES_PASSWORD: BookingData@2020
     image: postgres:12
     networks:
       - locally

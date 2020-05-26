@@ -1,0 +1,16 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: booking
+spec:
+  entryPoints:
+    - http
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/`)
+      priority: 10
+      services:
+        - kind: Service
+          name: booking
+          port: 80

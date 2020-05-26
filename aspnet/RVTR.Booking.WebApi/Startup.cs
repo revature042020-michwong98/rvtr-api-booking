@@ -54,7 +54,10 @@ namespace RVTR.Booking.WebApi
 
       services.AddDbContext<BookingContext>(options =>
       {
-        options.UseNpgsql(Configuration.GetConnectionString("pgsql"));
+        options.UseNpgsql(Configuration.GetConnectionString("pgsql"), options =>
+        {
+          options.EnableRetryOnFailure(3);
+        });
       });
 
       services.AddScoped<UnitOfWork>();

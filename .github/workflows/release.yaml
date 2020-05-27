@@ -37,7 +37,7 @@ jobs:
         name: dotnet_publish_head
         run: dotnet publish --configuration Debug --no-build --output drop RVTR.Booking.WebApi/*.csproj
         working-directory: ${{ env.WORKING_DIRECTORY }}
-      - if: github.ref == 'refs/tags/'
+      - if: startsWith(github.ref, 'refs/tags/')
         name: dotnet_publish
         run: dotnet publish --configuration Release --no-build --output drop RVTR.Booking.WebApi/*.csproj
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -136,7 +136,7 @@ jobs:
         run: |
           docker image tag booking docker.pkg.github.com/rvtr/rvtr-api-booking/booking:master-aspnet-rest
           docker image push docker.pkg.github.com/rvtr/rvtr-api-booking/booking:master-aspnet-rest
-      - if: github.ref == 'refs/tags/'
+      - if: startsWith(github.ref, 'refs/tags/')
         name: docker_push
         run: |
           docker image tag booking docker.pkg.github.com/rvtr/rvtr-api-booking/booking:aspnet-rest
@@ -150,4 +150,3 @@ on:
   push:
     branches:
       - master
-    tags:

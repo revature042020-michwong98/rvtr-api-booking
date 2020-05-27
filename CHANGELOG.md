@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning][semver].
 
 ## [unreleased]
 
+## [0.2.0] :: 2020-05-26
+
 ### added
 
 - configure the project definition for container orchestration
@@ -28,6 +30,7 @@ and this project adheres to [Semantic Versioning][semver].
 - design and launch the database context
 - design and launch the restful service
 
+[0.2.0]: https://github.com/rvtr/rvtr-api-booking/tree/0.2.0 '0.2.0'
 [0.1.0]: https://github.com/rvtr/rvtr-api-booking/tree/0.1.0 '0.1.0'
 [0.0.0]: https://github.com/rvtr/rvtr-api-booking/tree/0.0.0 '0.0.0'
 [changelog]: https://keepachangelog.com/en/1.0.0/ 'keep a changelog'

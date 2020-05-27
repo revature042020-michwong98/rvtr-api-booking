@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning][semver].
 
 ## [unreleased]
 
+## [0.2.2] :: 2020-05-27
+
+### added
+
+- fix release workflow build error
+
 ## [0.2.1] :: 2020-05-27
 
 ### added
@@ -36,6 +42,7 @@ and this project adheres to [Semantic Versioning][semver].
 - design and launch the database context
 - design and launch the restful service
 
+[0.2.2]: https://github.com/rvtr/rvtr-api-booking/tree/0.2.2 '0.2.2'
 [0.2.1]: https://github.com/rvtr/rvtr-api-booking/tree/0.2.1 '0.2.1'
 [0.2.0]: https://github.com/rvtr/rvtr-api-booking/tree/0.2.0 '0.2.0'
 [0.1.0]: https://github.com/rvtr/rvtr-api-booking/tree/0.1.0 '0.1.0'

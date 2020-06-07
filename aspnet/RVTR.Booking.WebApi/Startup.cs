@@ -22,7 +22,7 @@ namespace RVTR.Booking.WebApi
     ///
     /// </summary>
     /// <value></value>
-    public IConfiguration Configuration { get; }
+    private readonly IConfiguration _configuration;
 
     /// <summary>
     ///
@@ -30,7 +30,7 @@ namespace RVTR.Booking.WebApi
     /// <param name="configuration"></param>
     public Startup(IConfiguration configuration)
     {
-      Configuration = configuration;
+      _configuration = configuration;
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ namespace RVTR.Booking.WebApi
 
       services.AddDbContext<BookingContext>(options =>
       {
-        options.UseNpgsql(Configuration.GetConnectionString("pgsql"), options =>
+        options.UseNpgsql(_configuration.GetConnectionString("pgsql"), options =>
         {
           options.EnableRetryOnFailure(3);
         });

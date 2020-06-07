@@ -11,17 +11,31 @@ using zipkin4net.Transport.Http;
 
 namespace RVTR.Booking.WebApi
 {
+  /// <summary>
+  ///
+  /// </summary>
   internal class ClientZipkinMiddleware : IMiddleware
   {
     private readonly IConfiguration _configuration;
     private readonly ILoggerFactory _loggerFactory;
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <param name="loggerFactory"></param>
     public ClientZipkinMiddleware(IConfiguration configuration, ILoggerFactory loggerFactory)
     {
       _configuration = configuration;
       _loggerFactory = loggerFactory;
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="next"></param>
+    /// <returns></returns>
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
       var lifetime = context.RequestServices.GetService<IHostApplicationLifetime>();

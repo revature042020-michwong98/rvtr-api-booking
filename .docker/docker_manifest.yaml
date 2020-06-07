@@ -10,6 +10,7 @@ services:
       - data
     environment:
       ConnectionStrings__pgsql: 'Host=data;Database=BookingData;Username=postgres;Password=BookingData@2020;'
+      ConnectionStrings__zipkin: 'http://trace:9411/'
     networks:
       - locally
     ports:
@@ -21,5 +22,12 @@ services:
     image: postgres:12
     networks:
       - locally
+
+  trace:
+    image: openzipkin/zipkin-slim
+    networks:
+      - locally
+    ports:
+      - 9411:9411
 
 version: '3.8'

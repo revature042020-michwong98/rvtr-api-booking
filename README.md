@@ -1,6 +1,7 @@
 # readme
 
 [![build status](https://github.com/RVTR/rvtr-api-booking/workflows/build/badge.svg)](https://github.com/RVTR/rvtr-api-booking/actions?query=workflow%3Abuild)
+[![release](https://github.com/RVTR/rvtr-api-booking/workflows/release/badge.svg)](https://github.com/RVTR/rvtr-api-booking/actions?query=workflow%3Arelease)
 [![coverage status](https://sonarcloud.io/api/project_badges/measure?project=rvtr_api_booking&metric=coverage)](https://sonarcloud.io/dashboard?id=rvtr_api_booking)
 [![maintainability rating](https://sonarcloud.io/api/project_badges/measure?project=rvtr_api_booking&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=rvtr_api_booking)
 [![reliability rating](https://sonarcloud.io/api/project_badges/measure?project=rvtr_api_booking&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=rvtr_api_booking)

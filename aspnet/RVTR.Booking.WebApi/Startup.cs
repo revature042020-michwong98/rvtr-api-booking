@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using RVTR.Booking.DataContext;
 using RVTR.Booking.DataContext.Repositories;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using zipkin4net.Middleware;
 
 namespace RVTR.Booking.WebApi
 {
@@ -85,6 +86,7 @@ namespace RVTR.Booking.WebApi
       }
 
       applicationBuilder.UseZipkin();
+      applicationBuilder.UseTracing("bookingapi.rest");
       applicationBuilder.UseHttpsRedirection();
       applicationBuilder.UseRouting();
       applicationBuilder.UseSwagger();

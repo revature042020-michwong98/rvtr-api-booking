@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning][semver].
 
 ## [unreleased]
 
+### added
+
+- configure the project definition for distributed tracing
+
 ## [0.2.2] :: 2020-05-27
 
 ### added

@@ -1,5 +1,3 @@
-
-
 using System;
 using System.IO;
 using System.Reflection;
@@ -15,7 +13,7 @@ namespace RVTR.Booking.WebApi
   /// <summary>
   ///
   /// </summary>
-  public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
+  public class ClientSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
   {
     private readonly IApiVersionDescriptionProvider _provider;
     private readonly IConfiguration _configuration;
@@ -25,7 +23,7 @@ namespace RVTR.Booking.WebApi
     /// </summary>
     /// <param name="provider"></param>
     /// <param name="configuration"></param>
-    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider, IConfiguration configuration)
+    public ClientSwaggerOptions(IApiVersionDescriptionProvider provider, IConfiguration configuration)
     {
       _configuration = configuration;
       _provider = provider;

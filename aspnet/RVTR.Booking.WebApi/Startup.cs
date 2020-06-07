@@ -62,7 +62,7 @@ namespace RVTR.Booking.WebApi
 
       services.AddScoped<UnitOfWork>();
       services.AddSwaggerGen();
-      services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+      services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ClientSwaggerOptions>();
       services.AddVersionedApiExplorer(options =>
       {
         options.GroupNameFormat = "'v'V";

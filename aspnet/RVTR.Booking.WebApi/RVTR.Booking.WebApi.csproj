@@ -4,7 +4,7 @@
     <DebugType>Full</DebugType>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <RestoreLockedMode>true</RestoreLockedMode>
+    <RestoreLockedMode>false</RestoreLockedMode>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>0.3.0</Version>
@@ -13,6 +13,10 @@
   <ItemGroup>
     <PackageReference Include="microsoft.aspnetcore.mvc.versioning" Version="4.1.1" />
     <PackageReference Include="microsoft.aspnetcore.mvc.versioning.apiexplorer" Version="4.1.1" />
+    <PackageReference Include="microsoft.entityframeworkcore.design" Version="3.1.5">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="npgsql.entityframeworkcore.postgresql" Version="3.1.3" />
     <PackageReference Include="swashbuckle.aspnetcore" Version="5.4.1" />
     <PackageReference Include="zipkin4net" Version="1.5.0" />

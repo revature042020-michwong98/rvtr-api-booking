@@ -15,9 +15,9 @@ namespace RVTR.Booking.WebApi
     ///
     /// </summary>
     /// <returns></returns>
-    public static async Task Main(string[] args)
+    public static async Task Main()
     {
-      var host = CreateHostBuilder(args).Build();
+      var host = CreateHostBuilder().Build();
 
       await CreateDbContextAsync(host);
       await host.RunAsync();
@@ -27,7 +27,7 @@ namespace RVTR.Booking.WebApi
     ///
     /// </summary>
     /// <returns></returns>
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
+    public static IHostBuilder CreateHostBuilder() =>
       Host.CreateDefaultBuilder().ConfigureWebHostDefaults(webBuilder =>
       {
         webBuilder.UseStartup<Startup>();

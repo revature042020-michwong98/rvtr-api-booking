@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using RVTR.Booking.DataContext;
 using RVTR.Booking.DataContext.Repositories;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using zipkin4net.Middleware;
+using Newtonsoft.Json;
 
 namespace RVTR.Booking.WebApi
 {
@@ -44,7 +46,13 @@ namespace RVTR.Booking.WebApi
         options.ReportApiVersions = true;
       });
 
-      services.AddControllers();
+      services.AddControllers()
+        .AddNewtonsoftJson(options => 
+        {
+          options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+          options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+        });
+
       services.AddCors(options =>
       {
         options.AddPolicy("Public", policy =>

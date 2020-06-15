@@ -46,9 +46,12 @@ namespace RVTR.Booking.WebApi
         options.ReportApiVersions = true;
       });
 
-      services.AddControllers().AddNewtonsoftJson(options => {
-        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-      });
+      services.AddControllers()
+        .AddNewtonsoftJson(options => 
+        {
+          options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+          options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+        });
 
       services.AddCors(options =>
       {

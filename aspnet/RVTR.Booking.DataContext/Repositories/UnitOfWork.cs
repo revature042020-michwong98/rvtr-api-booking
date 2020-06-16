@@ -16,7 +16,7 @@ namespace RVTR.Booking.DataContext.Repositories
             get
             {
                 if (this._booking == null)
-                    this._booking = new Repository<BookingModel>(this._context);
+                    this._booking = new BookingRepository(this._context);
                 return _booking;
             }
         }
@@ -27,7 +27,7 @@ namespace RVTR.Booking.DataContext.Repositories
             get
             {
                 if (this._stay == null)
-                    this._stay = new Repository<StayModel>(this._context);
+                    this._stay = new StayRepository(this._context);
                 return _stay;
             }
         }

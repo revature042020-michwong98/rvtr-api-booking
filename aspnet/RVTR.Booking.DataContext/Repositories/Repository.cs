@@ -28,7 +28,7 @@ namespace RVTR.Booking.DataContext.Repositories
 
         public virtual async Task<TEntity> SelectAsync(int id) => await _db.FindAsync(id).ConfigureAwait(true);
 
-        public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
+        public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", int limit = 50, int offset = 0)
         {
             IQueryable<TEntity> query = _db;
 
@@ -43,9 +43,13 @@ namespace RVTR.Booking.DataContext.Repositories
                 }
 
             if (orderBy != null)
-                return await orderBy(query).ToListAsync();
-            return await query.ToListAsync();
+                return await orderBy(query).Skip(offset).Take(limit).ToListAsync();
+            return await query.Skip(offset).Take(limit).ToListAsync();
         }
+
+        public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, int limit = 50, int offset = 0)
+            => await SelectAsync(filter, orderBy, null, limit, offset);
+
 
         public virtual void Update(TEntity entry) => _db.Update(entry);
     }

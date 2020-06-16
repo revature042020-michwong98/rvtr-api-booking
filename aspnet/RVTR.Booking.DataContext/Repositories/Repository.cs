@@ -47,8 +47,8 @@ namespace RVTR.Booking.DataContext.Repositories
             return await query.OrderBy(e => e).Skip(offset).Take(limit).ToListAsync();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> SelectAsync(SearchFilter filter)
-            => await SelectAsync(null, null, null, filter.Limit, filter.Offset);        
+        public virtual async Task<IEnumerable<TEntity>> SelectAsync(SearchFilter<TEntity> filter)
+            => await SelectAsync(null, filter.OrderBy, null, filter.Limit, filter.Offset);        
 
         public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, int limit = 50, int offset = 0)
             => await SelectAsync(filter, orderBy, null, limit, offset);

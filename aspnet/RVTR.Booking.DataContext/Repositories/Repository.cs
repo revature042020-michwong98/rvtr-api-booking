@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Linq.Dynamic.Core;
+using System.Linq.Dynamic.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace RVTR.Booking.DataContext.Repositories
@@ -55,19 +56,26 @@ namespace RVTR.Booking.DataContext.Repositories
                     query = query.Where(filter);
                 }
             }
-
-            if (!String.IsNullOrEmpty(searchFilter.StringFilter))
-                query = query.Where(searchFilter.StringFilter);
+            try
+            {
+                if (!String.IsNullOrEmpty(searchFilter.StringFilter))
+                    query = query.Where(searchFilter.StringFilter);
+            }
+            catch (ParseException) { }
 
             if (!string.IsNullOrEmpty(searchFilter.Includes))
-                foreach (var includeProperty in searchFilter.Includes.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var includeProperty in searchFilter.Includes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProperty);
                 }
 
-            if (searchFilter.OrderBy != null)
-                return await searchFilter.OrderBy(query).Skip(searchFilter.Offset).Take(searchFilter.Limit).ToListAsync();
+            try
+            {
+                if (searchFilter.OrderBy != null)
+                    return await searchFilter.OrderBy(query).Skip(searchFilter.Offset).Take(searchFilter.Limit).ToListAsync();
+            }
+            catch (ParseException) { }
+
             return await query.OrderBy(e => e).Skip(searchFilter.Offset).Take(searchFilter.Limit).ToListAsync();
         }
 

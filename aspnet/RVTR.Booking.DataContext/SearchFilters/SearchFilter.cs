@@ -11,6 +11,34 @@ namespace RVTR.Booking.DataContext
 
     public class SearchFilter<TEntity> where TEntity : class
     {
+        private Expression<Func<TEntity, bool>> _expressionFilter;
+        public virtual Expression<Func<TEntity, bool>> ExpressionFilter
+        {
+            get { return _expressionFilter; }
+            set { _expressionFilter = value; }
+        }
+
+        private string _stringFilter;
+        public virtual string StringFilter
+        {
+            get { return _stringFilter; }
+            set { _stringFilter = value; }
+        }
+
+        private string _includes;
+        public virtual string Includes
+        {
+            get { return _includes; }
+            set { _includes = value; }
+        }
+
+        private Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> _orderBy;
+        public virtual Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> OrderBy
+        {
+            get { return _orderBy; }
+            set { _orderBy = value; }
+        }
+
         private int _offset = 0;
         public virtual int Offset
         {
@@ -33,31 +61,34 @@ namespace RVTR.Booking.DataContext
             }
         }
 
-        private Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> _orderBy;
-        public virtual Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> OrderBy
-        {
-            get { return _orderBy; }
-            set { _orderBy = value; }
-        }
-
-        private Expression<Func<TEntity, bool>> _filter;
-        public virtual Expression<Func<TEntity, bool>> Filter
-        {
-            get { return _filter; }
-            set { _filter = value; }
-        }
+        public SearchFilter() { }
 
         public SearchFilter(IEnumerable<KeyValuePair<String, StringValues>> queryParameters)
         {
-            int limit;
-            if (Int32.TryParse(queryParameters.FirstOrDefault(x => x.Key == "offset").Value, out limit))
-                Limit = limit;
-            int offset;
-            if (Int32.TryParse(queryParameters.FirstOrDefault(x => x.Key == "limit").Value, out offset))
-                Offset = offset;
-            
-            GenerateOrderby(queryParameters.FirstOrDefault(x => x.Key == "sort").Value);
+            if (queryParameters != null)
+            {
+                GenerateOrderby(queryParameters.FirstOrDefault(x => x.Key == "sort").Value);
+
+                int offset;
+                if (Int32.TryParse(queryParameters.FirstOrDefault(x => x.Key == "offset").Value, out offset))
+                    Offset = offset;
+                    
+                int limit;
+                if (Int32.TryParse(queryParameters.FirstOrDefault(x => x.Key == "limit").Value, out limit))
+                    Limit = limit;
+            }
         }
+
+        private void GenerateFilter(string filterString = null)
+        {
+            if (String.IsNullOrEmpty(filterString))
+                return;
+            string filter = ParseFilter(filterString);
+            if (!String.IsNullOrEmpty(filter))
+                StringFilter = filter;
+        }
+
+        protected virtual string ParseFilter(string filterString) => filterString;
 
         private void GenerateOrderby(string sortString = null)
         {
@@ -65,15 +96,11 @@ namespace RVTR.Booking.DataContext
                 return;
             string sort = ParseSort(sortString);
             if (!String.IsNullOrEmpty(sort))
-            {
-                OrderBy = (queryable) => queryable.OrderBy(sort);
-            }
+                OrderBy = x => x.OrderBy(sort);
+
         }
 
-        protected virtual string ParseSort(string sortString)
-        {
-            return sortString;
-        }
+        protected virtual string ParseSort(string sortString) => sortString;
     }
 
 }

@@ -62,7 +62,7 @@ namespace RVTR.Booking.WebApi.Controllers
     {
       if (String.IsNullOrEmpty(HttpContext.Request.QueryString.Value))
         return Ok(await _unitOfWork.Booking.SelectAsync());
-      return Ok(await _unitOfWork.Booking.SelectAsync(new SearchFilter<BookingModel>(HttpContext.Request.Query)));
+      return Ok(await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(HttpContext.Request.Query)));
     }
 
     /// <summary>

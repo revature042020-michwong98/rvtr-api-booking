@@ -16,13 +16,14 @@ namespace RVTR.Booking.DataContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.Entity<BookingModel>().HasKey(e => e.Id);
-      modelBuilder.Entity<BookingModel>().Property(e => e.Id).HasIdentityOptions(startValue: 100);
+      modelBuilder.Entity<BookingModel>().Property(e => e.Id).HasIdentityOptions(startValue: 1000);
 
       modelBuilder.Entity<GuestModel>().HasKey(e => e.Id);
 
       modelBuilder.Entity<RentalModel>().HasKey(e => e.Id);
 
       modelBuilder.Entity<StayModel>().HasKey(e => e.Id);
+      modelBuilder.Entity<StayModel>().Property(e => e.Id).HasIdentityOptions(startValue: 10000);
       modelBuilder.Entity<StayModel>().Property(e => e.DateCreated).ValueGeneratedOnAdd();
       modelBuilder.Entity<StayModel>().Property(e => e.DateModified).ValueGeneratedOnAdd().ValueGeneratedOnUpdate();
 

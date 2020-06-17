@@ -33,9 +33,9 @@ namespace RVTR.Booking.WebApi.Controllers
         }
 
         /// <summary>
-        ///
+        /// Deletes booking by id.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id of booking.</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
@@ -56,22 +56,27 @@ namespace RVTR.Booking.WebApi.Controllers
         }
 
         /// <summary>
-        ///
+        /// Get all bookings.
         /// </summary>
+        /// <param name="bookingSearchQueries">Search parameters from the query string to filter bookings.</param>
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Get([FromQuery] BookingSearchQueries bookingSearchQueries)
         {
+            // No booking search queries.
             if (bookingSearchQueries == null)
+                // Get all bookings.
                 return Ok(await _unitOfWork.Booking.SelectAsync());
+
+            // Get all bookings using booking search queries.
             return Ok(await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(bookingSearchQueries)));
         }
 
         /// <summary>
-        ///
+        /// Get booking by id.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id of booking.</param>
         /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
@@ -89,9 +94,9 @@ namespace RVTR.Booking.WebApi.Controllers
         }
 
         /// <summary>
-        ///
+        /// Create a new booking.
         /// </summary>
-        /// <param name="booking"></param>
+        /// <param name="booking">Object containing booking information.</param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(201)]
@@ -113,9 +118,9 @@ namespace RVTR.Booking.WebApi.Controllers
         }
 
         /// <summary>
-        ///
+        /// Update booking information.
         /// </summary>
-        /// <param name="booking"></param>
+        /// <param name="booking">Object containing booking information.</param>
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(200)]
@@ -133,6 +138,7 @@ namespace RVTR.Booking.WebApi.Controllers
                 }
                 catch (DbUpdateException)
                 {
+                    // Entity Framework Core update exception.
                     return BadRequest();
                 }
             }

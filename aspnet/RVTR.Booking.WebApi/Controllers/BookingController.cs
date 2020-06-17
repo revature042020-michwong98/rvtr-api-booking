@@ -2,10 +2,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using RVTR.Booking.DataContext.Repositories;
 using RVTR.Booking.ObjectModel.Models;
 using RVTR.Booking.DataContext;
-using System;
 
 namespace RVTR.Booking.WebApi.Controllers
 {
@@ -38,6 +38,8 @@ namespace RVTR.Booking.WebApi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -58,6 +60,7 @@ namespace RVTR.Booking.WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Get([FromQuery] BookingSearchQueries bookingSearchQueries)
         {
             if (bookingSearchQueries == null)
@@ -71,6 +74,8 @@ namespace RVTR.Booking.WebApi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -89,12 +94,22 @@ namespace RVTR.Booking.WebApi.Controllers
         /// <param name="booking"></param>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Post(BookingModel booking)
         {
-            await _unitOfWork.Booking.InsertAsync(booking);
-            await _unitOfWork.CommitAsync();
+            if (ModelState.IsValid)
+            {
+                await _unitOfWork.Booking.InsertAsync(booking);
+                await _unitOfWork.CommitAsync();
 
-            return Accepted(booking);
+                return CreatedAtAction(nameof(Post), booking);
+            }
+            else
+            {
+                // Model state is invalid.
+                return BadRequest();
+            }
         }
 
         /// <summary>
@@ -103,12 +118,28 @@ namespace RVTR.Booking.WebApi.Controllers
         /// <param name="booking"></param>
         /// <returns></returns>
         [HttpPut]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Put(BookingModel booking)
         {
-            _unitOfWork.Booking.Update(booking);
-            await _unitOfWork.CommitAsync();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _unitOfWork.Booking.Update(booking);
+                    await _unitOfWork.CommitAsync();
 
-            return Accepted(booking);
+                    return Ok(booking);
+                }
+                catch (DbUpdateException)
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

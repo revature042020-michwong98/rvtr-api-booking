@@ -10,12 +10,16 @@ namespace RVTR.Booking.ObjectModel.Models
   /// </summary>
   public class StayModel : IValidatableObject
   {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Column(TypeName = "date")]
+    [Required]
     public DateTime CheckIn { get; set; }
 
     [Column(TypeName = "date")]
+    [Required]
     public DateTime CheckOut { get; set; }
 
     [Column(TypeName = "date")]
@@ -24,8 +28,9 @@ namespace RVTR.Booking.ObjectModel.Models
     [Column(TypeName = "date")]
     public DateTime DateModified { get; set; }
 
+    [Required]
+    [ForeignKey("Booking")]
     public int? BookingId { get; set; }
-
     public virtual BookingModel Booking { get; set; }
 
     public StayModel()

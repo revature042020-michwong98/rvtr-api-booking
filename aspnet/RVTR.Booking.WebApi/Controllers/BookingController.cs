@@ -9,106 +9,106 @@ using System;
 
 namespace RVTR.Booking.WebApi.Controllers
 {
-  /// <summary>
-  ///
-  /// </summary>
-  [ApiController]
-  [ApiVersion("0.0")]
-  [EnableCors("Public")]
-  [Route("api/v{version:apiVersion}/[controller]")]
-  public class BookingController : ControllerBase
-  {
-    private readonly ILogger<BookingController> _logger;
-    private readonly UnitOfWork _unitOfWork;
-
     /// <summary>
     ///
     /// </summary>
-    /// <param name="logger"></param>
-    /// <param name="unitOfWork"></param>
-    public BookingController(ILogger<BookingController> logger, UnitOfWork unitOfWork)
+    [ApiController]
+    [ApiVersion("0.0")]
+    [EnableCors("Public")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class BookingController : ControllerBase
     {
-      _logger = logger;
-      _unitOfWork = unitOfWork;
+        private readonly ILogger<BookingController> _logger;
+        private readonly UnitOfWork _unitOfWork;
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="unitOfWork"></param>
+        public BookingController(ILogger<BookingController> logger, UnitOfWork unitOfWork)
+        {
+            _logger = logger;
+            _unitOfWork = unitOfWork;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _unitOfWork.Booking.DeleteAsync(id);
+                await _unitOfWork.CommitAsync();
+
+                return Ok();
+            }
+            catch
+            {
+                return NotFound(id);
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] SearchFilterQueries searchFilterQueries)
+        {
+            if (searchFilterQueries == null)
+                return Ok(await _unitOfWork.Booking.SelectAsync());
+            return Ok(await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(searchFilterQueries)));
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                return Ok(await _unitOfWork.Booking.SelectAsync(id));
+            }
+            catch
+            {
+                return NotFound(id);
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="booking"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Post(BookingModel booking)
+        {
+            await _unitOfWork.Booking.InsertAsync(booking);
+            await _unitOfWork.CommitAsync();
+
+            return Accepted(booking);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="booking"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<IActionResult> Put(BookingModel booking)
+        {
+            _unitOfWork.Booking.Update(booking);
+            await _unitOfWork.CommitAsync();
+
+            return Accepted(booking);
+        }
     }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-      try
-      {
-        await _unitOfWork.Booking.DeleteAsync(id);
-        await _unitOfWork.CommitAsync();
-
-        return Ok();
-      }
-      catch
-      {
-        return NotFound(id);
-      }
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
-    public async Task<IActionResult> Get()
-    {
-      if (String.IsNullOrEmpty(HttpContext.Request.QueryString.Value))
-        return Ok(await _unitOfWork.Booking.SelectAsync());
-      return Ok(await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(HttpContext.Request.Query)));
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
-    {
-      try
-      {
-        return Ok(await _unitOfWork.Booking.SelectAsync(id));
-      }
-      catch
-      {
-        return NotFound(id);
-      }
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="booking"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<IActionResult> Post(BookingModel booking)
-    {
-      await _unitOfWork.Booking.InsertAsync(booking);
-      await _unitOfWork.CommitAsync();
-
-      return Accepted(booking);
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="booking"></param>
-    /// <returns></returns>
-    [HttpPut]
-    public async Task<IActionResult> Put(BookingModel booking)
-    {
-      _unitOfWork.Booking.Update(booking);
-      await _unitOfWork.CommitAsync();
-
-      return Accepted(booking);
-    }
-  }
 }

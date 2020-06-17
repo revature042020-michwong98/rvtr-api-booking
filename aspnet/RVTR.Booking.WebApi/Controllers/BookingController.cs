@@ -58,11 +58,11 @@ namespace RVTR.Booking.WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] SearchFilterQueries searchFilterQueries)
+        public async Task<IActionResult> Get([FromQuery] BookingSearchQueries bookingSearchQueries)
         {
-            if (searchFilterQueries == null)
+            if (bookingSearchQueries == null)
                 return Ok(await _unitOfWork.Booking.SelectAsync());
-            return Ok(await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(searchFilterQueries)));
+            return Ok(await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(bookingSearchQueries)));
         }
 
         /// <summary>

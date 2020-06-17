@@ -8,8 +8,8 @@ namespace RVTR.Booking.DataContext
 
     public class BookingSearchFilter : SearchFilter<BookingModel>
     {
-        public BookingSearchFilter(SearchFilterQueries searchFilterQueries)
-            : base(searchFilterQueries)
+        public BookingSearchFilter(BookingSearchQueries bookingSearchQueries)
+            : base(bookingSearchQueries)
         {
             Includes = "Guests,Rentals";
         }

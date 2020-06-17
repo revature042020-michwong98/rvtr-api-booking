@@ -63,18 +63,18 @@ namespace RVTR.Booking.DataContext
 
         public SearchFilter() { }
 
-        public SearchFilter(IEnumerable<KeyValuePair<String, StringValues>> queryParameters)
+        public SearchFilter(SearchFilterQueries searchFilterQueries)
         {
-            if (queryParameters != null)
+            if (searchFilterQueries != null)
             {
-                GenerateOrderby(queryParameters.FirstOrDefault(x => x.Key == "sort").Value);
+                GenerateOrderby(searchFilterQueries.Sort);
 
                 int offset;
-                if (Int32.TryParse(queryParameters.FirstOrDefault(x => x.Key == "offset").Value, out offset))
+                if (Int32.TryParse(searchFilterQueries.Offset, out offset))
                     Offset = offset;
                     
                 int limit;
-                if (Int32.TryParse(queryParameters.FirstOrDefault(x => x.Key == "limit").Value, out limit))
+                if (Int32.TryParse(searchFilterQueries.Limit, out limit))
                     Limit = limit;
             }
         }

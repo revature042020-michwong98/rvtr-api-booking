@@ -67,6 +67,8 @@ namespace RVTR.Booking.DataContext
         {
             if (searchFilterQueries != null)
             {
+                GenerateFilter(searchFilterQueries.Filter);
+
                 GenerateOrderby(searchFilterQueries.Sort);
 
                 int offset;

@@ -33,7 +33,7 @@ namespace RVTR.Booking.DataContext.Repositories
         {
             var searchFilter = new SearchFilter<TEntity>()
             {
-                ExpressionFilter = filter,
+                Filters = new List<Expression<Func<TEntity, bool>>>() { filter },
                 OrderBy = orderBy,
                 Includes = includeProperties,
                 Offset = offset,
@@ -46,8 +46,15 @@ namespace RVTR.Booking.DataContext.Repositories
         {
             IQueryable<TEntity> query = _db;
 
-            if (searchFilter.ExpressionFilter != null)
-                query = query.Where(searchFilter.ExpressionFilter);
+            if (searchFilter.Filters != null)
+            {
+                foreach (var filter in searchFilter.Filters)
+                {
+                    if (filter == null)
+                        continue;
+                    query = query.Where(filter);
+                }
+            }
 
             if (!String.IsNullOrEmpty(searchFilter.StringFilter))
                 query = query.Where(searchFilter.StringFilter);

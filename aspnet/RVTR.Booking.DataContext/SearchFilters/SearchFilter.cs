@@ -11,11 +11,11 @@ namespace RVTR.Booking.DataContext
 
     public class SearchFilter<TEntity> where TEntity : class
     {
-        private Expression<Func<TEntity, bool>> _expressionFilter;
-        public virtual Expression<Func<TEntity, bool>> ExpressionFilter
+        private List<Expression<Func<TEntity, bool>>> _filters = new List<Expression<Func<TEntity, bool>>>();
+        public virtual List<Expression<Func<TEntity, bool>>> Filters
         {
-            get { return _expressionFilter; }
-            set { _expressionFilter = value; }
+            get { return _filters; }
+            set { _filters = value; }
         }
 
         private string _stringFilter;

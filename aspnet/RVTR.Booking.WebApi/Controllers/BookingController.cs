@@ -21,8 +21,6 @@ namespace RVTR.Booking.WebApi.Controllers
     private readonly ILogger<BookingController> _logger;
     private readonly UnitOfWork _unitOfWork;
 
-    private readonly SearchFilter _searchFilter;
-
     /// <summary>
     ///
     /// </summary>
@@ -32,7 +30,6 @@ namespace RVTR.Booking.WebApi.Controllers
     {
       _logger = logger;
       _unitOfWork = unitOfWork;
-      _searchFilter = new SearchFilter();
     }
 
     /// <summary>
@@ -63,12 +60,9 @@ namespace RVTR.Booking.WebApi.Controllers
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-      int limit, offset;
-      Int32.TryParse(HttpContext.Request.Query["limit"], out limit);
-      Int32.TryParse(HttpContext.Request.Query["offset"], out offset);
-      _searchFilter.Limit = limit;
-      _searchFilter.Offset = offset;
-      return Ok(await _unitOfWork.Booking.SelectAsync(_searchFilter));
+      if (String.IsNullOrEmpty(HttpContext.Request.QueryString.Value))
+        return Ok(await _unitOfWork.Booking.SelectAsync());
+      return Ok(await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(HttpContext.Request.Query)));
     }
 
     /// <summary>

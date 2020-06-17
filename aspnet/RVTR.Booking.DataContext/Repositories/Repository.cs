@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace RVTR.Booking.DataContext.Repositories
@@ -28,31 +29,40 @@ namespace RVTR.Booking.DataContext.Repositories
 
         public virtual async Task<TEntity> SelectAsync(int id) => await _db.FindAsync(id).ConfigureAwait(true);
 
-        public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", int limit = 50, int offset = 0)
+        public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", int offset = 0, int limit = 50)
+        {
+            var searchFilter = new SearchFilter<TEntity>()
+            {
+                ExpressionFilter = filter,
+                OrderBy = orderBy,
+                Includes = includeProperties,
+                Offset = offset,
+                Limit = limit
+            };
+            return await SelectAsync(searchFilter);
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> SelectAsync(SearchFilter<TEntity> searchFilter)
         {
             IQueryable<TEntity> query = _db;
 
-            if (filter != null)
-                query = query.Where(filter);
+            if (searchFilter.ExpressionFilter != null)
+                query = query.Where(searchFilter.ExpressionFilter);
 
-            if (!string.IsNullOrEmpty(includeProperties))
-                foreach (var includeProperty in includeProperties.Split
+            if (!String.IsNullOrEmpty(searchFilter.StringFilter))
+                query = query.Where(searchFilter.StringFilter);
+
+            if (!string.IsNullOrEmpty(searchFilter.Includes))
+                foreach (var includeProperty in searchFilter.Includes.Split
                 (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProperty);
                 }
 
-            if (orderBy != null)
-                return await orderBy(query).Skip(offset).Take(limit).ToListAsync();
-            return await query.OrderBy(e => e).Skip(offset).Take(limit).ToListAsync();
+            if (searchFilter.OrderBy != null)
+                return await searchFilter.OrderBy(query).Skip(searchFilter.Offset).Take(searchFilter.Limit).ToListAsync();
+            return await query.OrderBy(e => e).Skip(searchFilter.Offset).Take(searchFilter.Limit).ToListAsync();
         }
-
-        public virtual async Task<IEnumerable<TEntity>> SelectAsync(SearchFilter filter)
-            => await SelectAsync(null, null, null, filter.Limit, filter.Offset);        
-
-        public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, int limit = 50, int offset = 0)
-            => await SelectAsync(filter, orderBy, null, limit, offset);
-
 
         public virtual void Update(TEntity entry) => _db.Update(entry);
     }

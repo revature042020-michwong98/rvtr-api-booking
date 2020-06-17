@@ -14,10 +14,14 @@ namespace RVTR.Booking.DataContext.Repositories
 
         public override async Task<IEnumerable<BookingModel>> SelectAsync() => await IncludeQuery().ToListAsync();
 
-        public override async Task<BookingModel> SelectAsync(int id) => await IncludeQuery().FirstOrDefaultAsync(booking => booking.Id == id);
+        public override async Task<BookingModel> SelectAsync(int id) => await IncludeQuery().FirstAsync(booking => booking.Id == id);
 
-        public override async Task<IEnumerable<BookingModel>> SelectAsync(Expression<Func<BookingModel, bool>> filter = null, Func<IQueryable<BookingModel>, IOrderedQueryable<BookingModel>> orderBy = null, int limit = 50, int offset = 0)
-            => await SelectAsync(filter, orderBy, "Stay,Rentals,Guests", limit, offset);
+        // public override async Task<IEnumerable<BookingModel>> SelectAsync(Expression<Func<BookingModel, bool>> filter = null, Func<IQueryable<BookingModel>, IOrderedQueryable<BookingModel>> orderBy = null, int limit = 50, int offset = 0)
+        //     => await SelectAsync(filter, orderBy, "Stay,Rentals,Guests", limit, offset);
+
+        // public override async Task<IEnumerable<BookingModel>> SelectAsync(SearchFilter<BookingModel> searchFilter)
+        //     => await SelectAsync(null, searchFilter.OrderBy, "Stay,Rentals,Guests", searchFilter.Limit, searchFilter.Offset);
+
         private IQueryable<BookingModel> IncludeQuery()
             => _db.Include("Stay")
             .Include("Guests")

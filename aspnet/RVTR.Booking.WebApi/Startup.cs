@@ -51,6 +51,7 @@ namespace RVTR.Booking.WebApi
         {
           options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
           options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+          options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
         });
 
       services.AddCors(options =>

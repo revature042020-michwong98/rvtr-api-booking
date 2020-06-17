@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RVTR.Booking.ObjectModel.Models
 {
@@ -8,18 +9,26 @@ namespace RVTR.Booking.ObjectModel.Models
   /// </summary>
   public class BookingModel : IValidatableObject
   {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
+    [Required]
     public int AccountId { get; set; }
 
+    [Required]
     public int LodgingId { get; set; }
 
+    [Required]
     public IEnumerable<GuestModel> Guests { get; set; }
 
+    [Required]
     public IEnumerable<RentalModel> Rentals { get; set; }
 
+    [Required]
     public string Status { get; set; }
 
+    [Required]
     public StayModel Stay { get; set; }
 
     /// <summary>

@@ -12,5 +12,15 @@ namespace RVTR.Booking.DataContext
                 _accountId = value;
             }
         }
+
+        private string _lodgingId;
+        public string LodgingId
+        {
+            get { return _lodgingId; }
+            set
+            {
+                _lodgingId = value;
+            }
+        }
     }
 }

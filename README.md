@@ -19,6 +19,70 @@ The project is made available under the terms of the [MIT License][license_mit].
 
 [license_mit]: https://github.com/rvtr/rvtr-api-booking/blob/master/LICENSE 'mit license'
 
+## Usage
+
+The current base API route is: `/api/v0.0/`
+
+### Resources
+There are two resourcs that the Booking Api provides: `Booking` and `Stay`
+
+The following are endpoints and the supported request methods for requesting data
+
+#### Booking
+
+`GET /Booking` - Fetches a list of all known bookings from the db
+
+`GET /Booking/:id` - Fetches a single Booking record based on id
+
+`POST /Booking` - Posts a new Booking record to the db.  The following JSON schema is required to post a Booking:
+
+```typescript
+{
+  "AccountId": number,
+  "LodgingId": number,
+  "Guests": [],
+  "Rentals": [],
+  "Status": string,
+  "Stay": {
+    "CheckIn": Date,
+    "CheckOut": Date,
+    "Bookingid": number
+  }
+}
+```
+
+`PUT /Booking` - Updates a booking record based on the JSON object it receives. Ensure all properties
+are sent in the request for the record to succesfully update.
+
+`DELETE /Booking/:Id` - Deletes a Booking record from the database based on id
+
+#### Stay
+
+`GET /Stay` - Fetches a list of all known Stay records from the db
+
+`GET /Stay/:id` - Fetches a single Stay record based on id
+
+`POST /Stay` - Posts a new Stay record to the db.  The following JSON schema is required to post a Stay:
+
+```typescript
+{
+  "CheckIn": Date,
+  "CheckOut": Date,
+  "Bookingid": number
+}
+```
+
+Note: An exist BookingId must be given
+
+`PUT /Stay` - Updates a Stay record based on the JSON object it receives. Ensure all properties
+are sent in the request for the record to succesfully update.
+
+`DELETE /Stay/:Id` - Deletes a Stay record from the database based on id
+
+
+#### Querying
+
+
 ## Guides/References
 A set of resources used in the development of this project
 
@@ -41,5 +105,10 @@ https://medium.com/front-end-weekly/net-core-web-api-with-docker-compose-postgre
 https://www.microfocus.com/documentation/idol/IDOL_12_0/MediaServer/Guides/html/English/Content/Getting_Started/Configure/_TRN_Set_up_PostgreSQL.htm
 
 #### Unit of Work for ASP.NET Core
-https://medium.com/@chathuranga94/unit-of-work-for-asp-net-core-706e71abc9d1
+https://medium.com/@chathuranga94/unit-of-work-for-asp-net-core-706e71abc9d
 
+#### Tutorial: Add sorting, filtering, and paging - <span>ASP.NET</span> MVC with EF Core
+https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/sort-filter-page?view=aspnetcore-3.1
+
+#### Filtering and paging collection result in ASP.NET Core Web API
+https://dejanstojanovic.net/aspnet/2019/january/filtering-and-paging-in-aspnet-core-web-api/

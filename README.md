@@ -80,12 +80,41 @@ are sent in the request for the record to succesfully update.
 `DELETE /Stay/:Id` - Deletes a Stay record from the database based on id
 
 
-#### Querying
 
 
 ## Guides/References
 A set of resources used in the development of this project
 
+#### Querying
+
+Currently, `limit`, `offset`, `sort` and `filter`
+
+`limit` and `limit` are fairly self explantory.  Apply the following parameter queries to utilize these filters:
+
+`/Booking?limit=5&offset=5`
+
+For `sort`, specify the propertyof the resource you wish to sort by.
+
+```
+Sort by checkin date
+/Stay?sort=Checkin
+```
+
+For applying a reverse order sort, simply apply `desc` to the query value
+
+```
+Reverse sort by checkin date
+/Stay?sort=Checkin desc
+```
+
+**Note**: A space is required between the property and the `desc` keyword
+
+For filtering under constraints, apply the `fitler` query
+
+```
+Filter Stay's to a matching bookingId
+/Stay?filter=bookingId == 1
+```
 
 ### Docker
 Run this command to build the docker image for the application and the db

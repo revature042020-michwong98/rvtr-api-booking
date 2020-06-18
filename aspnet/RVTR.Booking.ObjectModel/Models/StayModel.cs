@@ -28,7 +28,6 @@ namespace RVTR.Booking.ObjectModel.Models
     [Column(TypeName = "date")]
     public DateTime DateModified { get; set; }
 
-    [Required]
     [ForeignKey("Booking")]
     public int? BookingId { get; set; }
     public virtual BookingModel Booking { get; set; }

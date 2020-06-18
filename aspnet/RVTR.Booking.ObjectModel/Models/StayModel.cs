@@ -52,7 +52,6 @@ namespace RVTR.Booking.ObjectModel.Models
     /// Foreign key relation for the Booking Model
     /// </summary>
     /// <value></value>
-    [Required]
     [ForeignKey("Booking")]
     public int? BookingId { get; set; }
     public virtual BookingModel Booking { get; set; }

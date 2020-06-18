@@ -1,9 +1,11 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RVTR.Booking.DataContext.Repositories;
 using RVTR.Booking.ObjectModel.Models;
+using RVTR.Booking.DataContext;
 
 namespace RVTR.Booking.WebApi.Controllers
 {
@@ -31,11 +33,16 @@ namespace RVTR.Booking.WebApi.Controllers
     }
 
     /// <summary>
-    ///
+    /// Deletes Stay resource by id.
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">Stay's unique Id</param>
+    /// <returns>
+    ///   Action result stating that the delete was succsessful
+    ///   or a NotFound message will display if the
+    /// </returns>
     [HttpDelete("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> Delete(int id)
     {
       try
@@ -56,9 +63,12 @@ namespace RVTR.Booking.WebApi.Controllers
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] StaySearchQueries queries)
     {
-      return Ok(await _unitOfWork.Stay.SelectAsync());
+      if (queries == null) return Ok(await _unitOfWork.Stay.SelectAsync());
+
+
+      return Ok(await _unitOfWork.Stay.SelectAsync(new StaySearchFilter(queries)));
     }
 
     /// <summary>
@@ -87,10 +97,19 @@ namespace RVTR.Booking.WebApi.Controllers
     [HttpPost]
     public async Task<IActionResult> Post(StayModel stay)
     {
-      await _unitOfWork.Stay.InsertAsync(stay);
-      await _unitOfWork.CommitAsync();
+      System.Console.WriteLine("Hello");
+      if (ModelState.IsValid)
+      {
+        await _unitOfWork.Stay.InsertAsync(stay);
+        await _unitOfWork.CommitAsync();
+        return Accepted(stay);
+      }
+      else
+      {
+        // Model state is invalid.
+        return BadRequest();
+      }
 
-      return Accepted(stay);
     }
 
     /// <summary>

@@ -62,7 +62,7 @@ namespace RVTR.Booking.WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Get([FromQuery] BookingSearchQueries bookingSearchQueries)
+        public async Task<IActionResult> Get([FromQuery] BookingSearchQueries bookingSearchQueries = null)
         {
             // No booking search queries.
             if (bookingSearchQueries == null)

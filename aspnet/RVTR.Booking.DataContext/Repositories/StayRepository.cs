@@ -1,9 +1,18 @@
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using RVTR.Booking.ObjectModel.Models;
+
 
 namespace RVTR.Booking.DataContext.Repositories
 {
-    public class StayRepository : Repository<StayModel>
+  public class StayRepository : Repository<StayModel>
+  {
+    public StayRepository(BookingContext context) : base(context) { }
+
+    public override async Task<IEnumerable<StayModel>> SelectAsync()
     {
-        public StayRepository(BookingContext context) : base(context) { }
+      return await _db.ToListAsync();
     }
+  }
 }

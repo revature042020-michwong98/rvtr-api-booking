@@ -22,10 +22,10 @@ namespace RVTR.Booking.WebApi.Controllers
         private readonly UnitOfWork _unitOfWork;
 
         /// <summary>
-        ///
+        /// Instanciates the Booking controller with all it's required utilities
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="unitOfWork"></param>
+        /// <param name="logger">Logging utility for displaying details to the console</param>
+        /// <param name="unitOfWork">Utility used to ensure transactions are atomic</param>
         public BookingController(ILogger<BookingController> logger, UnitOfWork unitOfWork)
         {
             _logger = logger;

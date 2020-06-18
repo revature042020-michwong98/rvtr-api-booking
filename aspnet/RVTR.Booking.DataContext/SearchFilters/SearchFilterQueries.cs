@@ -8,10 +8,9 @@ namespace RVTR.Booking.DataContext
     {
         private string _filter;
         /// <summary>
-        /// The expression used to filter data fetched based on a
-        /// specified constraint
+        /// The expression used to filter data fetched based on a specified constraint.
         /// #### Usage
-        /// `/{resource}?filter= id == 1`
+        /// `/{resource}?filter=id == 1`
         /// </summary>
         /// <value></value>
         public virtual string Filter

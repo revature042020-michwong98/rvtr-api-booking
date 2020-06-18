@@ -5,10 +5,16 @@ using RVTR.Booking.ObjectModel.Models;
 
 namespace RVTR.Booking.DataContext
 {
-
+    /// <summary>
+    /// A utility used to filter and sort records fetched from the database
+    /// </summary>
     public class BookingSearchFilter : SearchFilter<BookingModel>
     {
         private int _accountId;
+        /// <summary>
+        /// Id of the account record related to the booking record
+        /// </summary>
+        /// <value></value>
         public int AccountId
         {
             get { return _accountId; }
@@ -20,6 +26,10 @@ namespace RVTR.Booking.DataContext
         }
 
         private int _lodgingId;
+        /// <summary>
+        /// Id of the lodging record related to the booking record
+        /// </summary>
+        /// <value></value>
         public int LodgingId
         {
             get { return _lodgingId; }
@@ -30,6 +40,12 @@ namespace RVTR.Booking.DataContext
             }
         }
 
+        /// <summary>
+        /// Utility used to filter and sort records fetched from the database.
+        /// </summary>
+        /// <param name="bookingSearchQueries">
+        /// A POCO that specifies which fitlers/sorts to use to fetch records
+        /// </param>
         public BookingSearchFilter(BookingSearchQueries bookingSearchQueries)
             : base(bookingSearchQueries)
         {
@@ -41,6 +57,10 @@ namespace RVTR.Booking.DataContext
 
         public BookingSearchFilter() : this(null) { }
 
+        /// <summary>
+        /// TODO: add details
+        /// </summary>
+        /// <param name="accountIdString">Account's id pulled from query</param>
         public void CreateAccountIdFilter(string accountIdString)
         {
             int accountId;
@@ -52,12 +72,16 @@ namespace RVTR.Booking.DataContext
             this.Filters.Add(bookingModel => bookingModel.AccountId == this.AccountId);
         }
 
+        /// <summary>
+        /// TODO: add details
+        /// </summary>
+        /// <param name="lodgingIdString">Lodgin's id pulled from query</param>
         public void CreateLodgingIdFilter(string lodgingIdString)
         {
             int lodgingId;
             if (!Int32.TryParse(lodgingIdString, out lodgingId))
                 return;
-            
+
             this.LodgingId = lodgingId;
 
             this.Filters.Add(bookingModel => bookingModel.LodgingId == this.LodgingId);

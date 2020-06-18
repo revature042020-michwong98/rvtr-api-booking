@@ -10,7 +10,7 @@ using RVTR.Booking.DataContext;
 namespace RVTR.Booking.WebApi.Controllers
 {
   /// <summary>
-  ///
+  /// The Stay controller decides how to respond to requests made for fetching data.
   /// </summary>
   [ApiController]
   [ApiVersion("0.0")]
@@ -22,10 +22,10 @@ namespace RVTR.Booking.WebApi.Controllers
     private readonly UnitOfWork _unitOfWork;
 
     /// <summary>
-    ///
+    /// Instanciates the Stay controller with all it's required utilities
     /// </summary>
-    /// <param name="logger"></param>
-    /// <param name="unitOfWork"></param>
+    /// <param name="logger">Logging utility for displaying details to the console</param>
+    /// <param name="unitOfWork">Utility used to ensure transactions are atomic</param>
     public StayController(ILogger<StayController> logger, UnitOfWork unitOfWork)
     {
       _logger = logger;
@@ -34,12 +34,13 @@ namespace RVTR.Booking.WebApi.Controllers
 
     /// <summary>
     /// Deletes Stay resource by id.
+    ///
+    /// Returns an empty OK response on success
+    ///
+    /// Otherwise a 404 is returned because the Stay was not found
     /// </summary>
     /// <param name="id">Stay's unique Id</param>
-    /// <returns>
-    ///   Action result stating that the delete was succsessful
-    ///   or a NotFound message will display if the
-    /// </returns>
+    /// <returns></returns>
     [HttpDelete("{id}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
@@ -59,10 +60,14 @@ namespace RVTR.Booking.WebApi.Controllers
     }
 
     /// <summary>
-    ///
+    /// Fetches a list of all Stay records from the databse.
     /// </summary>
+    /// <param name="queries">
+    /// A POCO used to filter/sort records before they are returned from the response
+    /// </param>
     /// <returns></returns>
     [HttpGet]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> Get([FromQuery] StaySearchQueries queries)
     {
       if (queries == null) return Ok(await _unitOfWork.Stay.SelectAsync());
@@ -72,11 +77,13 @@ namespace RVTR.Booking.WebApi.Controllers
     }
 
     /// <summary>
-    ///
+    /// Get Stay by id.
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">Id of the Stay record</param>
     /// <returns></returns>
     [HttpGet("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> Get(int id)
     {
       try
@@ -90,11 +97,13 @@ namespace RVTR.Booking.WebApi.Controllers
     }
 
     /// <summary>
-    ///
+    /// Create a new Stay record
     /// </summary>
     /// <param name="stay"></param>
     /// <returns></returns>
     [HttpPost]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
     public async Task<IActionResult> Post(StayModel stay)
     {
       System.Console.WriteLine("Hello");
@@ -113,11 +122,13 @@ namespace RVTR.Booking.WebApi.Controllers
     }
 
     /// <summary>
-    ///
+    /// Updates a Stay Record
     /// </summary>
     /// <param name="stay"></param>
     /// <returns></returns>
     [HttpPut]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     public async Task<IActionResult> Put(StayModel stay)
     {
       _unitOfWork.Stay.Update(stay);

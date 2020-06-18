@@ -7,7 +7,15 @@ namespace RVTR.Booking.DataContext
         {
             get { return _dates; }
             set { _dates = value; }
-        }   
+        }
+
+        private string _lodgingId;
+        public string LodgingId
+        {
+            get { return _lodgingId; }
+            set { _lodgingId = value; }
+        }
+        
     }
 }
 

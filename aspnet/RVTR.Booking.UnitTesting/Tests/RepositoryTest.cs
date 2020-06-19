@@ -14,18 +14,60 @@ namespace RVTR.Booking.UnitTesting.Tests
     private static readonly SqliteConnection _connection = new SqliteConnection("Data Source=:memory:");
     private static readonly DbContextOptions<BookingContext> _options = new DbContextOptionsBuilder<BookingContext>().UseSqlite(_connection).Options;
 
-    public static readonly IEnumerable<object[]> _records = new List<object[]>()
+    public static readonly IEnumerable<object[]> _bothRecords = new List<object[]>()
     {
       new object[]
       {
-        new BookingModel() { Id = 1, Status = "Valid" },
-        new StayModel() { Id = 1 }
+        new BookingModel()
+        {
+          Id = 1,
+          AccountId = 1,
+          LodgingId = 1,
+          Guests = new List<GuestModel>(),
+          Rentals = new List<RentalModel>(),
+          Status = "status",
+          Stay = new StayModel()
+          {
+            Id = 1,
+            CheckIn = DateTime.Now,
+            CheckOut = DateTime.Now,
+            DateCreated = DateTime.Now,
+            DateModified = DateTime.Now,
+            BookingId = 1
+          }
+        },
+        new StayModel()
+        {
+          Id = 2,
+          CheckIn = DateTime.Now,
+          CheckOut = DateTime.Now,
+          DateCreated = DateTime.Now,
+          DateModified = DateTime.Now,
+          BookingId = 1
+        }
+      }
+    };
+
+    public static readonly IEnumerable<object[]> _bookingOnlyRecords = new List<object[]>()
+    {
+      new object[]
+      {
+        new BookingModel()
+        {
+          Id = 0,
+          AccountId = 0,
+          LodgingId = 0,
+          Guests = new List<GuestModel>(),
+          Rentals = new List<RentalModel>(),
+          Status = "status",
+          Stay = new StayModel()
+        }
       }
     };
 
     [Theory]
-    [MemberData(nameof(_records))]
-    public async void Test_Repository_DeleteAsync(BookingModel booking, StayModel stay)
+    [MemberData(nameof(_bookingOnlyRecords))]
+    public async void Test_Repository_DeleteAsync(BookingModel booking)
     {
       await _connection.OpenAsync();
 
@@ -35,7 +77,6 @@ namespace RVTR.Booking.UnitTesting.Tests
         {
           await ctx.Database.EnsureCreatedAsync();
           await ctx.Bookings.AddAsync(booking);
-          await ctx.Stays.AddAsync(stay);
           await ctx.SaveChangesAsync();
         }
 
@@ -49,15 +90,6 @@ namespace RVTR.Booking.UnitTesting.Tests
           Assert.Empty(await ctx.Bookings.ToListAsync());
         }
 
-        using (var ctx = new BookingContext(_options))
-        {
-          var stays = new Repository<StayModel>(ctx);
-
-          await stays.DeleteAsync(1);
-          await ctx.SaveChangesAsync();
-
-          Assert.Empty(await ctx.Stays.ToListAsync());
-        }
       }
       finally
       {
@@ -66,8 +98,8 @@ namespace RVTR.Booking.UnitTesting.Tests
     }
 
     [Theory]
-    [MemberData(nameof(_records))]
-    public async void Test_Repository_InsertAsync(BookingModel booking, StayModel stay)
+    [MemberData(nameof(_bookingOnlyRecords))]
+    public async void Test_Repository_InsertAsync(BookingModel booking)
     {
       await _connection.OpenAsync();
 
@@ -88,15 +120,6 @@ namespace RVTR.Booking.UnitTesting.Tests
           Assert.NotEmpty(await ctx.Bookings.ToListAsync());
         }
 
-        using (var ctx = new BookingContext(_options))
-        {
-          var stays = new Repository<StayModel>(ctx);
-
-          await stays.InsertAsync(stay);
-          await ctx.SaveChangesAsync();
-
-          Assert.NotEmpty(await ctx.Stays.ToListAsync());
-        }
       }
       finally
       {
@@ -177,7 +200,7 @@ namespace RVTR.Booking.UnitTesting.Tests
     }
 
     [Theory]
-    [MemberData(nameof(_records))]
+    [MemberData(nameof(_bothRecords))]
     public async void Test_Repository_Update(BookingModel booking, StayModel stay)
     {
       await _connection.OpenAsync();

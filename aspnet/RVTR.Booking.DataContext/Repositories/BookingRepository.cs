@@ -30,5 +30,19 @@ namespace RVTR.Booking.DataContext.Repositories
             => _db.Include("Guests")
             .Include("Rentals")
             .Include("Rentals.RentalUnit");
+
+        public override void Update(BookingModel booking)
+        {
+            foreach (var rental in booking.Rentals)
+            {
+                var rentalUnit = _context.Set<RentalUnitModel>().FirstOrDefault(ru => ru.Id == rental.RentalUnit.Id);
+                if (rentalUnit != null)
+                    rental.RentalUnit = rentalUnit;
+                else
+                    _context.Set<RentalUnitModel>().Add(rental.RentalUnit);
+            }
+
+            _db.Update(booking);
+        }
     }
 }

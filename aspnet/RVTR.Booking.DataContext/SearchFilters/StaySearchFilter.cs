@@ -38,7 +38,7 @@ namespace RVTR.Booking.DataContext
 
         public StaySearchFilter(StaySearchQueries staySearchQueries) : base(staySearchQueries)
         {
-            this.Includes = "Booking";
+            this.Includes = "Booking,Booking.Rentals";
 
             CreateDateFilter(staySearchQueries.Dates);
             CreateLodgingIdFilter(staySearchQueries.LodgingId);

@@ -49,7 +49,7 @@ namespace RVTR.Booking.DataContext
         public BookingSearchFilter(BookingSearchQueries bookingSearchQueries)
             : base(bookingSearchQueries)
         {
-            Includes = "Guests,Rentals,Rentals.RentalUnit";
+            Includes = "Guests,Rentals";
 
             CreateAccountIdFilter(bookingSearchQueries?.AccountId);
             CreateLodgingIdFilter(bookingSearchQueries?.LodgingId);

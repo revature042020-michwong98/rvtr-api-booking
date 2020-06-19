@@ -40,8 +40,8 @@ The following are endpoints and the supported request methods for requesting dat
 {
   "AccountId": number,
   "LodgingId": number,
-  "Guests": [],
-  "Rentals": [],
+  "Guests": Guest[],
+  "Rentals": Rental[],
   "Status": string,
   "Stay": {
     "CheckIn": Date,
@@ -79,15 +79,9 @@ are sent in the request for the record to succesfully update.
 
 `DELETE /Stay/:Id` - Deletes a Stay record from the database based on id
 
+### Querying
 
-
-
-## Guides/References
-A set of resources used in the development of this project
-
-#### Querying
-
-Currently, `limit`, `offset`, `sort` and `filter`
+Currently, the api supports the following methods for querying data, `limit`, `offset`, `sort` and `filter`
 
 `limit` and `limit` are fairly self explantory.  Apply the following parameter queries to utilize these filters:
 
@@ -116,8 +110,44 @@ Filter Stay's to a matching bookingId
 /Stay?filter=bookingId == 1
 ```
 
+#### Querying Bookings
+
+The following Booking model properties are supported for filtering and sorting data
+
+- AccountId
+- LodgingId
+
+#### Querying Stays
+
+The following Booking model properties are supported for filtering and sorting data
+
+- BookingId
+- LodginId
+
+The Stay model has specific query methods for extracting relevant data
+
+Namely these are `dates` and `lodgingId`
+
+`dates` expects a specific syntax including two dates in the `yyyy-MM-dd` format
+
+`dates` usage example:
+```
+Find Stay Records between January 1st, 2020 and Febuary 1st, 2020
+GET /Stay?dates=2020-01-01 to 2020-02-01
+```
+
+`lodgingId` usage example:
+```
+GET /Stay?lodgingId=1
+```
+
+
+## Guides/References
+A set of resources used in the development of this project
+
+
 ### Docker
-Run this command to build the docker image for the application and the db
+Run this command to build a docker image and runs the containers that will run your database and webapi application
 
 `docker-compose -f .\.docker\docker_manifest.yaml build`
 

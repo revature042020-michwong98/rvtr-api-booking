@@ -12,11 +12,7 @@ namespace RVTR.Booking.UnitTesting.Tests
 {
   public class BookingSearchFilterTest
   {
-    private static readonly SqliteConnection _connection = new SqliteConnection("Data Source=:memory:");
-    private static readonly DbContextOptions<BookingContext> _options = new DbContextOptionsBuilder<BookingContext>().UseSqlite(_connection).Options;
-    
-    //create an instance of a search filter query
-    // everything is a string
+
     [Fact]
     public void Test_BookingSearchFilter_CreateAccountIdFilter()
     {

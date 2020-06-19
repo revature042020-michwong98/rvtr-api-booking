@@ -19,7 +19,7 @@ namespace RVTR.Booking.UnitTesting.Tests
         Limit = "5",
         LodgingId = "2",
         Filter = "order-by",
-        Offset = "0",
+        Offset = "2",
         Sort = "none"
       };
       var searchFilter = new SearchFilter<BookingModel>();

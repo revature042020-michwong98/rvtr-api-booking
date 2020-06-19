@@ -44,6 +44,17 @@ namespace RVTR.Booking.DataContext
             CreateLodgingIdFilter(staySearchQueries.LodgingId);
         }
 
+        /// <summary>
+        /// Adds expressions for querying Stay records to be within a certain date range
+        ///
+        /// #### Usage
+        /// ```
+        /// /Stay?dates=2020-01-01 to 2020-02-01
+        /// ```
+        /// </summary>
+        /// <param name="dateString">
+        /// String used to determine the date range used
+        /// </param>
         public virtual void CreateDateFilter(string dateString)
         {
             if (String.IsNullOrEmpty(dateString))
@@ -68,6 +79,15 @@ namespace RVTR.Booking.DataContext
             this.Filters.Add(stayModel => stayModel.CheckIn <= this.CheckOut);
         }
 
+        /// <summary>
+        /// Adds a filter expression for querying Stay records that inlcude a sepcified
+        ///
+        /// #### Usage
+        /// ```
+        /// /Stay?LodgingId=1
+        /// ```
+        /// </summary>
+        /// <param name="lodgingIdString">The provided id of the Lodging record</param>
         public virtual void CreateLodgingIdFilter(string lodgingIdString)
         {
             int lodgingId;

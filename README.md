@@ -79,15 +79,9 @@ are sent in the request for the record to succesfully update.
 
 `DELETE /Stay/:Id` - Deletes a Stay record from the database based on id
 
-
-
-
-## Guides/References
-A set of resources used in the development of this project
-
 #### Querying
 
-Currently, `limit`, `offset`, `sort` and `filter`
+Currently, the api supports the following methods for querying data, `limit`, `offset`, `sort` and `filter`
 
 `limit` and `limit` are fairly self explantory.  Apply the following parameter queries to utilize these filters:
 
@@ -115,6 +109,11 @@ For filtering under constraints, apply the `fitler` query
 Filter Stay's to a matching bookingId
 /Stay?filter=bookingId == 1
 ```
+
+
+## Guides/References
+A set of resources used in the development of this project
+
 
 ### Docker
 Run this command to build the docker image for the application and the db

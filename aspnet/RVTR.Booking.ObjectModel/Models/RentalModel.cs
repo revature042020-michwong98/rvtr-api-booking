@@ -14,6 +14,10 @@ namespace RVTR.Booking.ObjectModel.Models
     public int? BookingId { get; set; }
     public virtual BookingModel Booking { get; set; }
 
+    [ForeignKey("RentalUnit")]
+    public int? RentalUnitId { get; set; }
+    public virtual RentalUnitModel RentalUnit { get; set; }
+
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => new List<ValidationResult>();
   }
 }

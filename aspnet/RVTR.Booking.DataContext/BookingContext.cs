@@ -25,6 +25,8 @@ namespace RVTR.Booking.DataContext
 
       modelBuilder.Entity<RentalModel>().HasKey(e => e.Id);
 
+      modelBuilder.Entity<RentalUnitModel>().HasKey(e => e.Id);
+
       modelBuilder.Entity<StayModel>().HasKey(e => e.Id);
       modelBuilder.Entity<StayModel>().Property(e => e.Id).HasIdentityOptions(startValue: 10000);
       modelBuilder.Entity<StayModel>().Property(e => e.DateCreated).ValueGeneratedOnAdd();

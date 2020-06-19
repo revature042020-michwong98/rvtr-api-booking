@@ -10,7 +10,6 @@ namespace RVTR.Booking.ObjectModel.Models
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required]
     [ForeignKey("Booking")]
     public int? BookingId { get; set; }
     public virtual BookingModel Booking { get; set; }

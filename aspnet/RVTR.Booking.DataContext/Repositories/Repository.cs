@@ -47,6 +47,12 @@ namespace RVTR.Booking.DataContext.Repositories
         {
             IQueryable<TEntity> query = _db;
 
+            if (!string.IsNullOrEmpty(searchFilter.Includes))
+                foreach (var includeProperty in searchFilter.Includes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+
             if (searchFilter.Filters != null)
             {
                 foreach (var filter in searchFilter.Filters)
@@ -62,12 +68,6 @@ namespace RVTR.Booking.DataContext.Repositories
                     query = query.Where(searchFilter.StringFilter);
             }
             catch (ParseException) { }
-
-            if (!string.IsNullOrEmpty(searchFilter.Includes))
-                foreach (var includeProperty in searchFilter.Includes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProperty);
-                }
 
             try
             {

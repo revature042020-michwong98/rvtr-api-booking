@@ -19,12 +19,135 @@ The project is made available under the terms of the [MIT License][license_mit].
 
 [license_mit]: https://github.com/rvtr/rvtr-api-booking/blob/master/LICENSE 'mit license'
 
+## Usage
+
+The current base API route is: `/api/v0.0/`
+
+### Resources
+There are two resourcs that the Booking Api provides: `Booking` and `Stay`
+
+The following are endpoints and the supported request methods for requesting data
+
+#### Booking
+
+`GET /Booking` - Fetches a list of all known bookings from the db
+
+`GET /Booking/:id` - Fetches a single Booking record based on id
+
+`POST /Booking` - Posts a new Booking record to the db.  The following JSON schema is required to post a Booking:
+
+```typescript
+{
+  "AccountId": number,
+  "LodgingId": number,
+  "Guests": Guest[],
+  "Rentals": Rental[],
+  "Status": string,
+  "Stay": {
+    "CheckIn": Date,
+    "CheckOut": Date,
+    "Bookingid": number
+  }
+}
+```
+
+`PUT /Booking` - Updates a booking record based on the JSON object it receives. Ensure all properties
+are sent in the request for the record to succesfully update.
+
+`DELETE /Booking/:Id` - Deletes a Booking record from the database based on id
+
+#### Stay
+
+`GET /Stay` - Fetches a list of all known Stay records from the db
+
+`GET /Stay/:id` - Fetches a single Stay record based on id
+
+`POST /Stay` - Posts a new Stay record to the db.  The following JSON schema is required to post a Stay:
+
+```typescript
+{
+  "CheckIn": Date,
+  "CheckOut": Date,
+  "Bookingid": number
+}
+```
+
+Note: An exist BookingId must be given
+
+`PUT /Stay` - Updates a Stay record based on the JSON object it receives. Ensure all properties
+are sent in the request for the record to succesfully update.
+
+`DELETE /Stay/:Id` - Deletes a Stay record from the database based on id
+
+### Querying
+
+Currently, the api supports the following methods for querying data, `limit`, `offset`, `sort` and `filter`
+
+`limit` and `limit` are fairly self explantory.  Apply the following parameter queries to utilize these filters:
+
+`/Booking?limit=5&offset=5`
+
+For `sort`, specify the propertyof the resource you wish to sort by.
+
+```
+Sort by checkin date
+/Stay?sort=Checkin
+```
+
+For applying a reverse order sort, simply apply `desc` to the query value
+
+```
+Reverse sort by checkin date
+/Stay?sort=Checkin desc
+```
+
+**Note**: A space is required between the property and the `desc` keyword
+
+For filtering under constraints, apply the `fitler` query
+
+```
+Filter Stay's to a matching bookingId
+/Stay?filter=bookingId == 1
+```
+
+#### Querying Bookings
+
+The following Booking model properties are supported for filtering and sorting data
+
+- AccountId
+- LodgingId
+
+#### Querying Stays
+
+The following Booking model properties are supported for filtering and sorting data
+
+- BookingId
+- LodginId
+
+The Stay model has specific query methods for extracting relevant data
+
+Namely these are `dates` and `lodgingId`
+
+`dates` expects a specific syntax including two dates in the `yyyy-MM-dd` format
+
+`dates` usage example:
+```
+Find Stay Records between January 1st, 2020 and Febuary 1st, 2020
+GET /Stay?dates=2020-01-01 to 2020-02-01
+```
+
+`lodgingId` usage example:
+```
+GET /Stay?lodgingId=1
+```
+
+
 ## Guides/References
 A set of resources used in the development of this project
 
 
 ### Docker
-Run this command to build the docker image for the application and the db
+Run this command to build a docker image and runs the containers that will run your database and webapi application
 
 `docker-compose -f .\.docker\docker_manifest.yaml build`
 
@@ -41,5 +164,10 @@ https://medium.com/front-end-weekly/net-core-web-api-with-docker-compose-postgre
 https://www.microfocus.com/documentation/idol/IDOL_12_0/MediaServer/Guides/html/English/Content/Getting_Started/Configure/_TRN_Set_up_PostgreSQL.htm
 
 #### Unit of Work for ASP.NET Core
-https://medium.com/@chathuranga94/unit-of-work-for-asp-net-core-706e71abc9d1
+https://medium.com/@chathuranga94/unit-of-work-for-asp-net-core-706e71abc9d
 
+#### Tutorial: Add sorting, filtering, and paging - <span>ASP.NET</span> MVC with EF Core
+https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/sort-filter-page?view=aspnetcore-3.1
+
+#### Filtering and paging collection result in ASP.NET Core Web API
+https://dejanstojanovic.net/aspnet/2019/january/filtering-and-paging-in-aspnet-core-web-api/

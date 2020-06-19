@@ -70,7 +70,10 @@ namespace RVTR.Booking.WebApi.Controllers
                 return Ok(await _unitOfWork.Booking.SelectAsync());
 
             // Get all bookings using booking search queries.
-            return Ok(await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(bookingSearchQueries)));
+            return Ok(new RecordsFetchDTO<BookingModel>{
+              Records = await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(bookingSearchQueries)),
+              Total = _unitOfWork.Booking.Count()
+            });
         }
 
         /// <summary>

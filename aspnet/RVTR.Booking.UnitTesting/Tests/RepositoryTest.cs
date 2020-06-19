@@ -127,8 +127,9 @@ namespace RVTR.Booking.UnitTesting.Tests
       }
     }
 
-    [Fact]
-    public async void Test_Repository_SelectAsync()
+    [Theory]
+    [MemberData(nameof(_bothRecords))]
+    public async void Test_Repository_SelectAsync(BookingModel booking, StayModel stay)
     {
       await _connection.OpenAsync();
 
@@ -137,6 +138,9 @@ namespace RVTR.Booking.UnitTesting.Tests
         using (var ctx = new BookingContext(_options))
         {
           await ctx.Database.EnsureCreatedAsync();
+          await ctx.Bookings.AddAsync(booking);
+          await ctx.Stays.AddAsync(stay);
+          await ctx.SaveChangesAsync();
         }
 
         using (var ctx = new BookingContext(_options))
@@ -145,7 +149,7 @@ namespace RVTR.Booking.UnitTesting.Tests
 
           var actual = await bookings.SelectAsync();
 
-          Assert.Empty(actual);
+          Assert.NotEmpty(actual);
         }
 
         using (var ctx = new BookingContext(_options))
@@ -154,7 +158,7 @@ namespace RVTR.Booking.UnitTesting.Tests
 
           var actual = await stays.SelectAsync();
 
-          Assert.Empty(actual);
+          Assert.NotEmpty(actual);
         }
       }
       finally
@@ -163,8 +167,9 @@ namespace RVTR.Booking.UnitTesting.Tests
       }
     }
 
-    [Fact]
-    public async void Test_Repository_SelectAsync_ById()
+    [Theory]
+    [MemberData(nameof(_bothRecords))]
+    public async void Test_Repository_SelectAsync_ById(BookingModel booking, StayModel stay)
     {
       await _connection.OpenAsync();
 
@@ -173,6 +178,9 @@ namespace RVTR.Booking.UnitTesting.Tests
         using (var ctx = new BookingContext(_options))
         {
           await ctx.Database.EnsureCreatedAsync();
+          await ctx.Bookings.AddAsync(booking);
+          await ctx.Stays.AddAsync(stay);
+          await ctx.SaveChangesAsync();
         }
 
         using (var ctx = new BookingContext(_options))
@@ -181,16 +189,16 @@ namespace RVTR.Booking.UnitTesting.Tests
 
           var actual = await bookings.SelectAsync(1);
 
-          Assert.Null(actual);
+          Assert.NotNull(actual);
         }
 
         using (var ctx = new BookingContext(_options))
         {
           var stays = new Repository<StayModel>(ctx);
 
-          var actual = await stays.SelectAsync(1);
+          var actual = await stays.SelectAsync(2);
 
-          Assert.Null(actual);
+          Assert.NotNull(actual);
         }
       }
       finally

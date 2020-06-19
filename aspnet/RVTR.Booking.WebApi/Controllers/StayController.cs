@@ -68,7 +68,7 @@ namespace RVTR.Booking.WebApi.Controllers
     /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(200)]
-    public async Task<IActionResult> Get([FromQuery] StaySearchQueries queries)
+    public async Task<IActionResult> Get([FromQuery] StaySearchQueries queries = null)
     {
       if (queries == null) return Ok(await _unitOfWork.Stay.SelectAsync());
 

@@ -258,6 +258,11 @@
         "resolved": "4.7.0",
         "contentHash": "oJjw3uFuVDJiJNbCD8HB4a2p3NYLdt1fiT5OGsPLw+WTOuG0KpP4OXelMmmVKpClueMsit6xOlzy4wNKQFiBLg=="
       },
+      "System.Linq.Dynamic.Core": {
+        "type": "Transitive",
+        "resolved": "1.1.5",
+        "contentHash": "VxPRhLUvdALtBE6vdO83LxjSc3RQ9CPYwLofqKg3BkOxgz8xb4Z4vr/YhoSQ5NGHR7m6yhMDzUNUWUEeSTCHmA=="
+      },
       "System.Memory": {
         "type": "Transitive",
         "resolved": "4.5.3",
@@ -272,6 +277,7 @@
         "type": "Project",
         "dependencies": {
           "RVTR.Booking.ObjectModel": "1.0.0",
+          "System.Linq.Dynamic.Core": "1.1.5",
           "npgsql.entityframeworkcore.postgresql": "3.1.3"
         }
       },

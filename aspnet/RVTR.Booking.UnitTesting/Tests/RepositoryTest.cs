@@ -82,7 +82,7 @@ namespace RVTR.Booking.UnitTesting.Tests
 
         using (var ctx = new BookingContext(_options))
         {
-          var bookings = new Repository<BookingModel>(ctx);
+          var bookings = new BookingRepository(ctx);
 
           await bookings.DeleteAsync(1);
           await ctx.SaveChangesAsync();

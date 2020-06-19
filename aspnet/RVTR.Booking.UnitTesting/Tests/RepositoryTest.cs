@@ -18,7 +18,7 @@ namespace RVTR.Booking.UnitTesting.Tests
     {
       new object[]
       {
-        new BookingModel() { Id = 1 },
+        new BookingModel() { Id = 1, Status = "Valid" },
         new StayModel() { Id = 1 }
       }
     };

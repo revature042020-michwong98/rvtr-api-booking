@@ -17,14 +17,11 @@ namespace RVTR.Booking.DataContext
     {
       modelBuilder.Entity<BookingModel>().HasKey(e => e.Id);
       modelBuilder.Entity<BookingModel>().HasMany(b => b.Guests).WithOne(g => g.Booking).IsRequired().OnDelete(DeleteBehavior.Cascade);
-      modelBuilder.Entity<BookingModel>().HasMany(b => b.Rentals).WithOne(r => r.Booking).IsRequired().OnDelete(DeleteBehavior.Cascade);
       modelBuilder.Entity<BookingModel>().HasOne(b => b.Stay).WithOne(s => s.Booking).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
       modelBuilder.Entity<GuestModel>().HasKey(e => e.Id);
 
       modelBuilder.Entity<RentalModel>().HasKey(e => e.Id);
-
-      modelBuilder.Entity<RentalUnitModel>().HasKey(e => e.Id);
 
       modelBuilder.Entity<StayModel>().HasKey(e => e.Id);
       modelBuilder.Entity<StayModel>().Property(e => e.DateCreated).ValueGeneratedOnAdd();

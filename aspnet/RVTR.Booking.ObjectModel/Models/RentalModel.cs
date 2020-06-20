@@ -7,14 +7,8 @@ namespace RVTR.Booking.ObjectModel.Models
   public class RentalModel : IValidatableObject
   {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Required]
     public int Id { get; set; }
-
-    [ForeignKey("Booking")]
-    public int? BookingId { get; set; }
-    public virtual BookingModel Booking { get; set; }
-
-    public virtual RentalUnitModel RentalUnit { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => new List<ValidationResult>();
   }

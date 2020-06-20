@@ -12,13 +12,16 @@ namespace RVTR.Booking.DataContext.Repositories
 
         public override async Task InsertAsync(BookingModel booking)
         {
+            var rentals = new List<RentalModel>();
             foreach (var rental in booking.Rentals)
             {
-                var rentalUnit = await _context.Set<RentalUnitModel>().FirstOrDefaultAsync(ru => ru.Id == rental.RentalUnit.Id);
-                if (rentalUnit != null)
-                    rental.RentalUnit = rentalUnit;
+                var rentalEntity = await _context.Set<RentalModel>().FindAsync(rental.Id);
+                if (rentalEntity != null)
+                    rentals.Add(rentalEntity);
+                else
+                    rentals.Add(rental);
             }
-
+            booking.Rentals = rentals.Distinct().ToList();
             await _db.AddAsync(booking).ConfigureAwait(true);
         }
 
@@ -28,20 +31,20 @@ namespace RVTR.Booking.DataContext.Repositories
 
         private IQueryable<BookingModel> IncludeQuery()
             => _db.Include("Guests")
-            .Include("Rentals")
-            .Include("Rentals.RentalUnit");
+            .Include("Rentals");
 
         public override void Update(BookingModel booking)
         {
+            var rentals = new List<RentalModel>();
             foreach (var rental in booking.Rentals)
             {
-                var rentalUnit = _context.Set<RentalUnitModel>().FirstOrDefault(ru => ru.Id == rental.RentalUnit.Id);
-                if (rentalUnit != null)
-                    rental.RentalUnit = rentalUnit;
+                var rentalEntity = _context.Set<RentalModel>().Find(rental.Id);
+                if (rentalEntity != null)
+                    rentals.Add(rentalEntity);
                 else
-                    _context.Set<RentalUnitModel>().Add(rental.RentalUnit);
+                    rentals.Add(_context.Set<RentalModel>().Add(rental).Entity);
             }
-
+            booking.Rentals = rentals.Distinct().ToList();
             _db.Update(booking);
         }
     }

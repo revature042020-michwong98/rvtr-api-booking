@@ -33,6 +33,12 @@ namespace RVTR.Booking.DataContext.Repositories
 
         public virtual async Task<TEntity> SelectAsync(int id) => await _db.FindAsync(id).ConfigureAwait(true);
 
+        /// <summary>
+        /// Returns the total amount of entities for a specific model.
+        /// </summary>
+        /// <returns>Total number of records</returns>
+        public virtual int Count() => _db.Count();
+
         public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", int offset = 0, int limit = 50)
         {
             var searchFilter = new SearchFilter<TEntity>()

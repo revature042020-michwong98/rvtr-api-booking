@@ -5,7 +5,7 @@ WORKDIR /workspace
 
 COPY . .
 
-RUN dotnet restore
+RUN dotnet restore --force-evaluate
 RUN dotnet build --no-restore
 RUN dotnet publish --configuration Debug --output out --no-build RVTR.Booking.WebApi/*.csproj
 

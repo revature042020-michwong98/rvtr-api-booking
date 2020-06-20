@@ -17,9 +17,12 @@ namespace RVTR.Booking.DataContext.Repositories
     {
         public readonly DbSet<TEntity> _db;
 
+        protected readonly BookingContext _context;
+
         public Repository(BookingContext context)
         {
             _db = context.Set<TEntity>();
+            _context = context;
         }
 
         public virtual async Task DeleteAsync(int id) => _db.Remove(await SelectAsync(id));

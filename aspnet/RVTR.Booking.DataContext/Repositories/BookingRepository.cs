@@ -10,7 +10,20 @@ namespace RVTR.Booking.DataContext.Repositories
     {
         public BookingRepository(BookingContext context) : base(context) { }
 
-        // public override async Task DeleteAsync(int id) => _db.Remove(await IncludeQuery().Include("Stay").FirstAsync(booking => booking.Id == id));
+        public override async Task InsertAsync(BookingModel booking)
+        {
+            var rentals = new List<RentalModel>();
+            foreach (var rental in booking.Rentals)
+            {
+                var rentalEntity = await _context.Set<RentalModel>().FindAsync(rental.Id);
+                if (rentalEntity != null)
+                    rentals.Add(rentalEntity);
+                else
+                    rentals.Add(rental);
+            }
+            booking.Rentals = rentals.Distinct().ToList();
+            await _db.AddAsync(booking).ConfigureAwait(true);
+        }
 
         public override async Task<IEnumerable<BookingModel>> SelectAsync() => await IncludeQuery().ToListAsync();
 
@@ -19,5 +32,20 @@ namespace RVTR.Booking.DataContext.Repositories
         private IQueryable<BookingModel> IncludeQuery()
             => _db.Include("Guests")
             .Include("Rentals");
+
+        public override void Update(BookingModel booking)
+        {
+            var rentals = new List<RentalModel>();
+            foreach (var rental in booking.Rentals)
+            {
+                var rentalEntity = _context.Set<RentalModel>().Find(rental.Id);
+                if (rentalEntity != null)
+                    rentals.Add(rentalEntity);
+                else
+                    rentals.Add(_context.Set<RentalModel>().Add(rental).Entity);
+            }
+            booking.Rentals = rentals.Distinct().ToList();
+            _db.Update(booking);
+        }
     }
 }

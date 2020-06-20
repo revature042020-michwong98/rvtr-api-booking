@@ -89,8 +89,8 @@ namespace RVTR.Booking.UnitTesting.Tests
       var staySearchFilter = new StaySearchFilter(_singleSearchFilterQuery);
       staySearchFilter.CreateDateFilter("2020-01-01to2020-01-03");
       Assert.Equal(2, staySearchFilter.Filters.Count);
-      Assert.Equal("1/1/2020 00:00:00", staySearchFilter.CheckIn.ToString());
-      Assert.Equal("1/3/2020 00:00:00", staySearchFilter.CheckOut.ToString());
+      Assert.NotEqual(DateTime.MinValue, staySearchFilter.CheckIn);
+      Assert.NotEqual(DateTime.MinValue, staySearchFilter.CheckOut);
     }
 
     [Theory]

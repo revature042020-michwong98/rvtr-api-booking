@@ -39,6 +39,15 @@ namespace RVTR.Booking.DataContext.Repositories
         /// <returns>Total number of records</returns>
         public virtual int Count() => _db.Count();
 
+        /// <summary>
+        /// Returns all records that match the search filters.
+        /// </summary>
+        /// <param name="filter">Predicate for linq where method</param>
+        /// <param name="orderBy">Order by method for linq order by method</param>
+        /// <param name="includeProperties">Properties to be included</param>
+        /// <param name="offset">Number for skip</param>
+        /// <param name="limit">Number for take</param>
+        /// <returns></returns>
         public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", int offset = 0, int limit = 50)
         {
             var searchFilter = new SearchFilter<TEntity>()
@@ -56,12 +65,14 @@ namespace RVTR.Booking.DataContext.Repositories
         {
             IQueryable<TEntity> query = _db;
 
+            // Include.
             if (!string.IsNullOrEmpty(searchFilter.Includes))
                 foreach (var includeProperty in searchFilter.Includes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProperty);
                 }
 
+            // Filter.
             if (searchFilter.Filters != null)
             {
                 foreach (var filter in searchFilter.Filters)
@@ -71,6 +82,8 @@ namespace RVTR.Booking.DataContext.Repositories
                     query = query.Where(filter);
                 }
             }
+
+            // Filter
             try
             {
                 if (!String.IsNullOrEmpty(searchFilter.StringFilter))
@@ -78,6 +91,7 @@ namespace RVTR.Booking.DataContext.Repositories
             }
             catch (ParseException) { }
 
+            // Order By, Skip, Take.
             try
             {
                 if (searchFilter.OrderBy != null)

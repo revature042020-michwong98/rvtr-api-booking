@@ -73,7 +73,11 @@ namespace RVTR.Booking.WebApi.Controllers
       if (queries == null) return Ok(await _unitOfWork.Stay.SelectAsync());
 
 
-      return Ok(await _unitOfWork.Stay.SelectAsync(new StaySearchFilter(queries)));
+      return Ok(new RecordsFetchDTO<StayModel>
+      {
+        Records = await _unitOfWork.Stay.SelectAsync(new StaySearchFilter(queries)),
+        Total = _unitOfWork.Stay.Count()
+      });
     }
 
     /// <summary>

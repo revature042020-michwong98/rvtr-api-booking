@@ -31,7 +31,8 @@ namespace RVTR.Booking.DataContext.Repositories
 
         private IQueryable<BookingModel> IncludeQuery()
             => _db.Include("Guests")
-            .Include("Rentals");
+            .Include("Rentals")
+            .Include("Stay");
 
         public override void Update(BookingModel booking)
         {

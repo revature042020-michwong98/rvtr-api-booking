@@ -11,6 +11,10 @@ namespace RVTR.Booking.DataContext
     public class StaySearchFilter : SearchFilter<StayModel>
     {
         private DateTime _checkIn;
+        /// <summary>
+        /// Specifies the constraint to search for Stays after this date
+        /// </summary>
+        /// <value></value>
         public virtual DateTime CheckIn
         {
             get { return _checkIn; }
@@ -19,12 +23,19 @@ namespace RVTR.Booking.DataContext
 
 
         private DateTime _checkOut;
+        /// <summary>
+        /// Specifies the constraignt to search for Stays before this date
+        /// </summary>
+        /// <value></value>
         public virtual DateTime CheckOut
         {
             get { return _checkOut; }
             set { _checkOut = value; }
         }
 
+        /// <summary>
+        /// Constraint to filter Stays with this Id for the `LodgingModel` entity.
+        /// </summary>
         private int _lodgingId;
         public int LodgingId
         {
@@ -36,6 +47,14 @@ namespace RVTR.Booking.DataContext
             }
         }
 
+        /// <summary>
+        /// Filter model for defining properties
+        /// used to filter, sort and paginate Stays
+        /// </summary>
+        /// <param name="staySearchQueries">
+        ///
+        /// </param>
+        /// <returns></returns>
         public StaySearchFilter(StaySearchQueries staySearchQueries) : base(staySearchQueries)
         {
             this.Includes = "Booking,Booking.Rentals";

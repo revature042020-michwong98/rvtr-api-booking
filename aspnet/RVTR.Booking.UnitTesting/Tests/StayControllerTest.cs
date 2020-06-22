@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -58,10 +59,12 @@ namespace RVTR.Booking.UnitTesting.Tests
       var resultMany = await _controller.Get();
       var resultFail = await _controller.Get(0);
       var resultOne = await _controller.Get(1);
+      var resultQuery = await _controller.Get(new StaySearchQueries());
 
-      Assert.NotNull(resultMany);
-      Assert.NotNull(resultFail);
-      Assert.NotNull(resultOne);
+      Assert.IsType<OkObjectResult>(resultMany);
+      Assert.IsType<NotFoundObjectResult>(resultFail);
+      Assert.IsType<OkObjectResult>(resultOne);
+      Assert.IsType<OkObjectResult>(resultQuery);
     }
 
     [Fact]
@@ -70,6 +73,15 @@ namespace RVTR.Booking.UnitTesting.Tests
       var resultPass = await _controller.Post(new StayModel());
 
       Assert.NotNull(resultPass);
+    }
+
+    [Fact]
+    public async void Post_Controller_Post_Invalid()
+    {
+      _controller.ModelState.AddModelError("Post", "InvalidModel");
+      var result = await _controller.Post(new StayModel());
+
+      Assert.IsType<BadRequestResult>(result);
     }
 
     [Fact]

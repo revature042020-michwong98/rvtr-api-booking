@@ -10,7 +10,9 @@ using RVTR.Booking.DataContext;
 namespace RVTR.Booking.WebApi.Controllers
 {
   /// <summary>
-  /// The Stay controller decides how to respond to requests made for fetching data.
+  /// The controller layer for the `StayModel.  Provided are HTTP endpoints
+  /// for handing calls to the server and determining how to perform
+  /// CRUD operations and data to send back to the client.
   /// </summary>
   [ApiController]
   [ApiVersion("0.0")]
@@ -73,11 +75,7 @@ namespace RVTR.Booking.WebApi.Controllers
       if (queries == null) return Ok(await _unitOfWork.Stay.SelectAsync());
 
 
-      return Ok(new RecordsFetchDTO<StayModel>
-      {
-        Records = await _unitOfWork.Stay.SelectAsync(new StaySearchFilter(queries)),
-        Total = _unitOfWork.Stay.Count()
-      });
+      return Ok(await _unitOfWork.Stay.SelectAsync(new StaySearchFilter(queries)));
     }
 
     /// <summary>
@@ -110,7 +108,6 @@ namespace RVTR.Booking.WebApi.Controllers
     [ProducesResponseType(400)]
     public async Task<IActionResult> Post(StayModel stay)
     {
-      System.Console.WriteLine("Hello");
       if (ModelState.IsValid)
       {
         await _unitOfWork.Stay.InsertAsync(stay);

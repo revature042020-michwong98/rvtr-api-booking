@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,7 @@ namespace RVTR.Booking.UnitTesting.Tests
 
     public BookingControllerTest()
     {
+
       var contextMock = new Mock<BookingContext>(_options);
       var loggerMock = new Mock<ILogger<BookingController>>();
       var repositoryMock = new Mock<Repository<BookingModel>>(new BookingContext(_options));
@@ -42,6 +44,8 @@ namespace RVTR.Booking.UnitTesting.Tests
       _controller = new BookingController(_logger, _unitOfWork);
     }
 
+    public IEnumerable<object> BadRequest { get; private set; }
+
     [Fact]
     public async void Test_Controller_Delete()
     {
@@ -58,18 +62,30 @@ namespace RVTR.Booking.UnitTesting.Tests
       var resultMany = await _controller.Get();
       var resultFail = await _controller.Get(0);
       var resultOne = await _controller.Get(1);
+      var resultSearch = await _controller.Get(new BookingSearchQueries());
+      
 
       Assert.NotNull(resultMany);
       Assert.NotNull(resultFail);
       Assert.NotNull(resultOne);
+      Assert.NotNull(resultSearch);
     }
 
     [Fact]
     public async void Test_Controller_Post()
     {
       var resultPass = await _controller.Post(new BookingModel());
+      
+      Assert.IsType<CreatedAtActionResult>(resultPass);
+    }
 
-      Assert.NotNull(resultPass);
+    [Fact]
+    public async void Post_BookingModel_Invalid()
+    {
+      _controller.ModelState.AddModelError("Post", "InvalidModel");
+      var result = await _controller.Post(new BookingModel());
+
+      Assert.IsType<BadRequestResult>(result);
     }
 
     [Fact]
@@ -77,7 +93,16 @@ namespace RVTR.Booking.UnitTesting.Tests
     {
       var resultPass = await _controller.Put(new BookingModel());
 
-      Assert.NotNull(resultPass);
+      Assert.IsType<OkObjectResult>(resultPass);
+    }
+
+    [Fact]
+    public async void Put_BookingModel_Invalid()
+    {
+      _controller.ModelState.AddModelError("Put", "InvalidModel");
+      var result = await _controller.Put(new BookingModel());
+
+      Assert.IsType<BadRequestResult>(result);
     }
   }
 }

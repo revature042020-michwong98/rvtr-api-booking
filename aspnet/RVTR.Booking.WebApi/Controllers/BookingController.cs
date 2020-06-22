@@ -10,7 +10,9 @@ using RVTR.Booking.DataContext;
 namespace RVTR.Booking.WebApi.Controllers
 {
     /// <summary>
-    ///
+    /// The controller layer for the `BookingModel.  Provided are HTTP endpoints
+    /// for handing calls to the server and determining how to perform
+    /// CRUD operations and data to send back to the client.
     /// </summary>
     [ApiController]
     [ApiVersion("0.0")]
@@ -70,10 +72,7 @@ namespace RVTR.Booking.WebApi.Controllers
                 return Ok(await _unitOfWork.Booking.SelectAsync());
 
             // Get all bookings using booking search queries.
-            return Ok(new RecordsFetchDTO<BookingModel>{
-              Records = await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(bookingSearchQueries)),
-              Total = _unitOfWork.Booking.Count()
-            });
+            return Ok(await _unitOfWork.Booking.SelectAsync(new BookingSearchFilter(bookingSearchQueries)));
         }
 
         /// <summary>

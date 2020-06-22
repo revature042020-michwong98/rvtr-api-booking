@@ -16,7 +16,8 @@ namespace RVTR.Booking.UnitTesting.Tests
         {
           Id = 0,
           BookingId = 0,
-          Booking = null
+          Booking = null,
+          Age = "Adult"
         }
       }
     };

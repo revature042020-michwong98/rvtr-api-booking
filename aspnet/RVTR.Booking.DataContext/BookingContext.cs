@@ -10,11 +10,16 @@ namespace RVTR.Booking.DataContext
   {
     public DbSet<BookingModel> Bookings { get; set; }
     public DbSet<StayModel> Stays { get; set; }
+    public DbSet<BookingRentalModel> BookingRentals { get; set; }
 
     public BookingContext(DbContextOptions<BookingContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      modelBuilder.Entity<BookingRentalModel>().HasKey(br => new { br.BookingId, br.RentalId });
+      modelBuilder.Entity<BookingRentalModel>().HasOne(br => br.Booking).WithMany(b => b.BookingRentals).HasForeignKey(br => br.BookingId);
+      modelBuilder.Entity<BookingRentalModel>().HasOne(br => br.Rental).WithMany(r => r.BookingRentals).HasForeignKey(br => br.RentalId);
+
       modelBuilder.Entity<BookingModel>().HasKey(e => e.Id);
       modelBuilder.Entity<BookingModel>().HasMany(b => b.Guests).WithOne(g => g.Booking).IsRequired().OnDelete(DeleteBehavior.Cascade);
       modelBuilder.Entity<BookingModel>().HasOne(b => b.Stay).WithOne(s => s.Booking).IsRequired().OnDelete(DeleteBehavior.Cascade);

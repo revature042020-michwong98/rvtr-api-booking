@@ -23,7 +23,7 @@ namespace RVTR.Booking.ObjectModel.Models
     public IEnumerable<GuestModel> Guests { get; set; }
 
     [Required]
-    public IEnumerable<RentalModel> Rentals { get; set; }
+    public IEnumerable<BookingRentalModel> BookingRentals { get; set; }
 
     [Required]
     public string Status { get; set; }

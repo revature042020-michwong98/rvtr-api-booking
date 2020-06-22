@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.Primitives;
 using RVTR.Booking.ObjectModel.Models;
 
 namespace RVTR.Booking.DataContext
@@ -15,7 +13,7 @@ namespace RVTR.Booking.DataContext
         /// Id of the account record related to the booking record
         /// </summary>
         /// <value></value>
-        public int AccountId
+        public virtual int AccountId
         {
             get { return _accountId; }
             set
@@ -30,7 +28,7 @@ namespace RVTR.Booking.DataContext
         /// Id of the lodging record related to the booking record
         /// </summary>
         /// <value></value>
-        public int LodgingId
+        public virtual int LodgingId
         {
             get { return _lodgingId; }
             set
@@ -58,10 +56,10 @@ namespace RVTR.Booking.DataContext
         public BookingSearchFilter() : this(null) { }
 
         /// <summary>
-        /// TODO: add details
+        /// Parses account id string to create an account id filter.
         /// </summary>
         /// <param name="accountIdString">Account's id pulled from query</param>
-        public void CreateAccountIdFilter(string accountIdString)
+        public virtual void CreateAccountIdFilter(string accountIdString)
         {
             int accountId;
             if (!Int32.TryParse(accountIdString, out accountId))
@@ -73,10 +71,10 @@ namespace RVTR.Booking.DataContext
         }
 
         /// <summary>
-        /// TODO: add details
+        /// Parses lodging id string to create a lodging id filter.
         /// </summary>
         /// <param name="lodgingIdString">Lodgin's id pulled from query</param>
-        public void CreateLodgingIdFilter(string lodgingIdString)
+        public virtual void CreateLodgingIdFilter(string lodgingIdString)
         {
             int lodgingId;
             if (!Int32.TryParse(lodgingIdString, out lodgingId))

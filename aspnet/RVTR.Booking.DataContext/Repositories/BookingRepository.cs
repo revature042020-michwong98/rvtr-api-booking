@@ -23,10 +23,10 @@ namespace RVTR.Booking.DataContext.Repositories
         /// </summary>
         /// <param name="booking">A `BookingModel` object expecting valid properties</param>
         /// <returns></returns>
-        public override async Task InsertAsync(BookingModel booking)
+        public override async Task InsertAsync(BookingModel entry)
         {
-            booking.BookingRentals = booking.BookingRentals.Distinct().ToList();
-            foreach (var bookingRental in booking.BookingRentals)
+            entry.BookingRentals = entry.BookingRentals.Distinct().ToList();
+            foreach (var bookingRental in entry.BookingRentals)
             {
                 var rental = await _context.Set<RentalModel>().AsNoTracking().FirstOrDefaultAsync(r => r.Id == bookingRental.RentalId);
                 if (rental == null)
@@ -35,7 +35,7 @@ namespace RVTR.Booking.DataContext.Repositories
                     bookingRental.Rental = newRental;
                 }
             }
-            await _db.AddAsync(booking).ConfigureAwait(true);
+            await _db.AddAsync(entry).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -67,11 +67,11 @@ namespace RVTR.Booking.DataContext.Repositories
         /// A `BookingModel` object whose properties match the values of a row
         /// from the `Bookings` table
         /// </param>
-        public override void Update(BookingModel booking)
+        public override void Update(BookingModel entry)
         {
-            var bookingEnity = IncludeQuery().Include("BookingRentals").FirstOrDefault(be => be.Id == booking.Id);
-            var bookingRentalEntities = _context.BookingRentals.Include(br => br.Rental).Where(br => br.BookingId == booking.Id).ToList();
-            var bookingRentals = booking.BookingRentals;
+            var bookingEnity = IncludeQuery().Include("BookingRentals").FirstOrDefault(be => be.Id == entry.Id);
+            var bookingRentalEntities = _context.BookingRentals.Include(br => br.Rental).Where(br => br.BookingId == entry.Id).ToList();
+            var bookingRentals = entry.BookingRentals;
 
             foreach (var bookingRentalEntity in bookingRentalEntities)
             {
@@ -105,18 +105,18 @@ namespace RVTR.Booking.DataContext.Repositories
             }
             bookingEnity.BookingRentals = newBookingRentals;
 
-            var guests = _context.Set<GuestModel>().Where(g => g.BookingId == booking.Id).ToList();
+            var guests = _context.Set<GuestModel>().Where(g => g.BookingId == entry.Id).ToList();
             var newGuests = new List<GuestModel>();
             _context.RemoveRange(guests);
             
-            foreach (var guest in booking.Guests)
+            foreach (var guest in entry.Guests)
             {
-                guest.BookingId = booking.Id;
+                guest.BookingId = entry.Id;
                 _context.Add(guest);
                 newGuests.Add(guest);
             }
 
-            booking.Guests = newGuests;
+            entry.Guests = newGuests;
 
             _db.Update(bookingEnity);
         }

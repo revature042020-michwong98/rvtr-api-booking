@@ -108,7 +108,6 @@ namespace RVTR.Booking.WebApi.Controllers
     [ProducesResponseType(400)]
     public async Task<IActionResult> Post(StayModel stay)
     {
-      System.Console.WriteLine("Hello");
       if (ModelState.IsValid)
       {
         await _unitOfWork.Stay.InsertAsync(stay);

@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Linq.Dynamic.Core;
+using System.Linq.Dynamic.Core.Exceptions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using RVTR.Booking.DataContext;
@@ -16,6 +20,7 @@ namespace RVTR.Booking.UnitTesting.Tests
 
     public static readonly IEnumerable<object[]> _bothRecords = new List<object[]>()
     {
+
       new object[]
       {
         new BookingModel()
@@ -47,7 +52,7 @@ namespace RVTR.Booking.UnitTesting.Tests
         }
       }
     };
-
+    
     public static readonly IEnumerable<object[]> _bookingOnlyRecords = new List<object[]>()
     {
       new object[]
@@ -120,6 +125,39 @@ namespace RVTR.Booking.UnitTesting.Tests
           Assert.NotEmpty(await ctx.Bookings.ToListAsync());
         }
 
+
+      }
+      finally
+      {
+        _connection.Close();
+      }
+    }
+
+    [Theory]
+    [MemberData(nameof(_bookingOnlyRecords))]
+    public async void Test_BookingRepository_InsertAsync(BookingModel booking)
+    {
+      await _connection.OpenAsync();
+      var rentals = new List<RentalModel>();
+      rentals.Add(new RentalModel { Id = 1 });
+      booking.Rentals = rentals;
+      try
+      {
+        using (var ctx = new BookingContext(_options))
+        {
+          await ctx.Database.EnsureCreatedAsync();
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var bookings = new BookingRepository(ctx);
+
+          await bookings.InsertAsync(booking);
+          await ctx.SaveChangesAsync();
+
+          Assert.NotEmpty(await ctx.Bookings.ToListAsync());
+        }
+
       }
       finally
       {
@@ -154,7 +192,16 @@ namespace RVTR.Booking.UnitTesting.Tests
 
         using (var ctx = new BookingContext(_options))
         {
-          var stays = new Repository<StayModel>(ctx);
+          var bookings = new BookingRepository(ctx);
+
+          var actual = await bookings.SelectAsync();
+
+          Assert.NotEmpty(actual);
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var stays = new StayRepository(ctx);
 
           var actual = await stays.SelectAsync();
 
@@ -209,7 +256,47 @@ namespace RVTR.Booking.UnitTesting.Tests
 
     [Theory]
     [MemberData(nameof(_bothRecords))]
-    public async void Test_Repository_Update(BookingModel booking, StayModel stay)
+    public async void Test_BookingandStayRepository_SelectAsync_ById(BookingModel booking, StayModel stay)
+    {
+      await _connection.OpenAsync();
+
+      try
+      {
+        using (var ctx = new BookingContext(_options))
+        {
+          await ctx.Database.EnsureCreatedAsync();
+          await ctx.Bookings.AddAsync(booking);
+          await ctx.Stays.AddAsync(stay);
+          await ctx.SaveChangesAsync();
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var bookings = new BookingRepository(ctx);
+
+          var actual = await bookings.SelectAsync(1);
+
+          Assert.NotNull(actual);
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var stays = new StayRepository(ctx);
+
+          var actual = await stays.SelectAsync(2);
+
+          Assert.NotNull(actual);
+        }
+      }
+      finally
+      {
+        _connection.Close();
+      }
+    }
+
+    [Theory]
+    [MemberData(nameof(_bothRecords))]
+    public async void Test_Repository_selectAsync_ByFilter(BookingModel booking, StayModel stay)
     {
       await _connection.OpenAsync();
 
@@ -226,6 +313,52 @@ namespace RVTR.Booking.UnitTesting.Tests
         using (var ctx = new BookingContext(_options))
         {
           var bookings = new Repository<BookingModel>(ctx);
+
+          var actual = await bookings.SelectAsync(null,null,"",0,50);
+
+          Assert.NotEmpty(actual);
+
+          actual = await bookings.SelectAsync(null,null, "",0,50);
+          Assert.NotEmpty(actual);
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var stays = new Repository<StayModel>(ctx);
+
+          var actual = await stays.SelectAsync(null, null,"",0,50);
+
+          Assert.NotEmpty(actual);
+        }
+      }
+      finally
+      {
+        _connection.Close();
+      }
+    }
+
+    [Theory]
+    [MemberData(nameof(_bothRecords))]
+    public async void Test_Repository_Update(BookingModel booking, StayModel stay)
+    {
+      await _connection.OpenAsync();
+      try
+      {
+        using (var ctx = new BookingContext(_options))
+        {
+          await ctx.Database.EnsureCreatedAsync();
+          await ctx.Bookings.AddAsync(booking);
+          await ctx.Stays.AddAsync(stay);
+          await ctx.SaveChangesAsync();
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var rentals = new List<RentalModel>();
+          var rental = new RentalModel { Id = 1 };
+          rentals.Add(rental);
+          booking.Rentals = rentals;
+          var bookings = new Repository<BookingModel>(ctx);
           var expected = await ctx.Bookings.FirstAsync();
 
           expected.Status = "updated";
@@ -236,6 +369,7 @@ namespace RVTR.Booking.UnitTesting.Tests
 
           Assert.Equal(expected, actual);
         }
+
 
         using (var ctx = new BookingContext(_options))
         {
@@ -255,6 +389,45 @@ namespace RVTR.Booking.UnitTesting.Tests
       {
         _connection.Close();
       }
+    }
+
+
+    [Theory]
+    [MemberData(nameof(_bothRecords))]
+    public async void Test_Count(BookingModel booking, StayModel stay)
+    {
+      await _connection.OpenAsync();
+      try
+      {
+
+        using (var ctx = new BookingContext(_options))
+        {
+          await ctx.Database.EnsureCreatedAsync();
+          await ctx.Bookings.AddAsync(booking);
+          await ctx.Stays.AddAsync(stay);
+          await ctx.SaveChangesAsync();
+        }
+        using (var ctx = new BookingContext(_options))
+        {
+
+          var bookings = new Repository<BookingModel>(ctx);
+          var bookingCount = bookings.Count();
+
+          Assert.Equal(1, bookingCount);
+        }
+
+        using (var ctx = new BookingContext(_options))
+        {
+          var stays = new Repository<StayModel>(ctx);
+          var stayCount = stays.Count();
+          Assert.Equal(1, stayCount);
+        }
+      }
+      finally
+      {
+        _connection.Close();
+      }
+
     }
   }
 }

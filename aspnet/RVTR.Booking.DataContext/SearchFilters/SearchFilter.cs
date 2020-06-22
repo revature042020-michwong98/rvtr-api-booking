@@ -3,8 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Linq.Dynamic.Core;
 using System.Collections.Generic;
-using Microsoft.Extensions.Primitives;
-using Microsoft.EntityFrameworkCore;
 
 namespace RVTR.Booking.DataContext
 {
@@ -23,29 +21,41 @@ namespace RVTR.Booking.DataContext
         public virtual List<Expression<Func<TEntity, bool>>> Filters
         {
             get { return _filters; }
-            set { _filters = value; }
+            set
+            {
+                if (value != null)
+                    _filters = value;
+            }
         }
 
         private string _stringFilter;
         /// <summary>
-        /// TODO: add details
+        /// Linq filter as a string.
         /// </summary>
         /// <value></value>
         public virtual string StringFilter
         {
             get { return _stringFilter; }
-            set { _stringFilter = value; }
+            set
+            {
+                if (value != null)
+                    _stringFilter = value;
+            }
         }
 
         private string _includes;
         /// <summary>
-        /// TODO: add details
+        /// String containing properties to include.
         /// </summary>
         /// <value></value>
         public virtual string Includes
         {
             get { return _includes; }
-            set { _includes = value; }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    _includes = value;
+            }
         }
 
         private Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> _orderBy;
@@ -56,7 +66,11 @@ namespace RVTR.Booking.DataContext
         public virtual Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> OrderBy
         {
             get { return _orderBy; }
-            set { _orderBy = value; }
+            set
+            {
+                if (value != null)
+                    _orderBy = value;
+            }
         }
 
         private int _offset = 0;
@@ -116,7 +130,7 @@ namespace RVTR.Booking.DataContext
         }
 
         /// <summary>
-        /// TODO: add details
+        /// Parses filter string and generates filter expression.
         /// </summary>
         /// <param name="filterString"></param>
         private void GenerateFilter(string filterString = null)
@@ -129,7 +143,7 @@ namespace RVTR.Booking.DataContext
         }
 
         /// <summary>
-        /// TODO: add details
+        /// Parses filter string. For overriding.
         /// </summary>
         /// <param name="filterString"></param>
         /// <returns></returns>
@@ -146,7 +160,7 @@ namespace RVTR.Booking.DataContext
         }
 
         /// <summary>
-        /// TODO: Add details
+        /// Parses sort string. For overriding.
         /// </summary>
         /// <param name="sortString"></param>
         /// <returns></returns>

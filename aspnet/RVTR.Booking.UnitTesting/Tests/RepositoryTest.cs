@@ -124,8 +124,6 @@ namespace RVTR.Booking.UnitTesting.Tests
 
                     Assert.NotEmpty(await ctx.Bookings.ToListAsync());
                 }
-
-
             }
             finally
             {

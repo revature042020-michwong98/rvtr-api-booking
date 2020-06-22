@@ -370,6 +370,23 @@ namespace RVTR.Booking.UnitTesting.Tests
 
                     Assert.NotEmpty(actual);
                 }
+
+                using (var ctx = new BookingContext(_options))
+                {
+                  var stays = new Repository<StayModel>(ctx);
+                  List<Expression<Func<StayModel, bool>>> _filters = new List<Expression<Func<StayModel, bool>>>();
+                   _filters.Add(s => s.Id > 0);
+                   
+                  SearchFilter<StayModel> searchFilter = new SearchFilter<StayModel>
+                  {
+                    Includes = "Booking",
+                    Filters = _filters,
+                    OrderBy = stays => stays.OrderBy(stay => stay.Id),
+                  };
+                  var actual = await stays.SelectAsync(searchFilter);
+
+                  Assert.NotNull(actual);
+                }
             }
             finally
             {
@@ -423,6 +440,25 @@ namespace RVTR.Booking.UnitTesting.Tests
 
                     Assert.Equal(expected, actual);
                 }
+
+                using (var ctx = new BookingContext(_options))
+                {
+                  List<GuestModel> _guests = new List<GuestModel>();
+                  GuestModel _guest = new GuestModel
+                  {
+                    Age = "30"
+                  };
+                  _guests.Add(_guest);        
+                  var bookings = new BookingRepository(ctx);
+                  var expected = await ctx.Bookings.FirstAsync();
+                  expected.BookingRentals = null;
+                  expected.Guests = _guests;
+                  bookings.Update(expected);
+                  await ctx.SaveChangesAsync();
+                  var actual = await ctx.Bookings.FirstAsync();
+                  Assert.Equal(expected, actual);
+                }
+
             }
             finally
             {

@@ -73,7 +73,7 @@ namespace RVTR.Booking.DataContext.Repositories
             var bookingRentalEntities = _context.BookingRentals.Include(br => br.Rental).Where(br => br.BookingId == booking.Id).ToList();
             var bookingRentals = booking.BookingRentals;
 
-            foreach (var bookingRentalEntity in bookingRentals)
+            foreach (var bookingRentalEntity in bookingRentalEntities)
             {
                 var bookingRental = bookingRentals.FirstOrDefault(br => br.RentalId == bookingRentalEntity.RentalId);
                 if (bookingRental == null)

@@ -103,8 +103,21 @@ namespace RVTR.Booking.DataContext.Repositories
                     newBookingRentals.Add(bookingRentalEntity);
                 }
             }
-
             bookingEnity.BookingRentals = newBookingRentals;
+
+            var guests = _context.Set<GuestModel>().Where(g => g.BookingId == booking.Id).ToList();
+            var newGuests = new List<GuestModel>();
+            _context.RemoveRange(guests);
+            
+            foreach (var guest in booking.Guests)
+            {
+                guest.BookingId = booking.Id;
+                _context.Add(guest);
+                newGuests.Add(guest);
+            }
+
+            booking.Guests = newGuests;
+
             _db.Update(bookingEnity);
         }
     }

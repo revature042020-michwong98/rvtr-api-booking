@@ -29,7 +29,7 @@ namespace RVTR.Booking.UnitTesting.Tests
           AccountId = 1,
           LodgingId = 1,
           Guests = new List<GuestModel>(),
-          Rentals = new List<RentalModel>(),
+          BookingRentals = new List<BookingRentalModel>(),
           Status = "status",
           Stay = new StayModel()
           {
@@ -63,7 +63,7 @@ namespace RVTR.Booking.UnitTesting.Tests
           AccountId = 0,
           LodgingId = 0,
           Guests = new List<GuestModel>(),
-          Rentals = new List<RentalModel>(),
+          BookingRentals = new List<BookingRentalModel>(),
           Status = "status",
           Stay = new StayModel()
         }

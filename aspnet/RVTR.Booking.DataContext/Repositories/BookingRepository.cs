@@ -25,16 +25,16 @@ namespace RVTR.Booking.DataContext.Repositories
         /// <returns></returns>
         public override async Task InsertAsync(BookingModel booking)
         {
-            var rentals = new List<RentalModel>();
-            foreach (var rental in booking.Rentals)
+            booking.BookingRentals = booking.BookingRentals.Distinct().ToList();
+            foreach (var bookingRental in booking.BookingRentals)
             {
-                var rentalEntity = await _context.Set<RentalModel>().FindAsync(rental.Id);
-                if (rentalEntity != null)
-                    rentals.Add(rentalEntity);
-                else
-                    rentals.Add(rental);
+                var rental = await _context.Set<RentalModel>().AsNoTracking().FirstOrDefaultAsync(r => r.Id == bookingRental.RentalId);
+                if (rental == null)
+                {
+                    var newRental = (await _context.AddAsync(new RentalModel { Id = bookingRental.RentalId })).Entity;
+                    bookingRental.Rental = newRental;
+                }
             }
-            booking.Rentals = rentals.Distinct().ToList();
             await _db.AddAsync(booking).ConfigureAwait(true);
         }
 
@@ -57,7 +57,7 @@ namespace RVTR.Booking.DataContext.Repositories
         /// <returns></returns>
         private IQueryable<BookingModel> IncludeQuery()
             => _db.Include("Guests")
-            .Include("Rentals")
+            .Include("BookingRentals")
             .Include("Stay");
 
         /// <summary>
@@ -69,17 +69,43 @@ namespace RVTR.Booking.DataContext.Repositories
         /// </param>
         public override void Update(BookingModel booking)
         {
-            var rentals = new List<RentalModel>();
-            foreach (var rental in booking.Rentals)
+            var bookingEnity = IncludeQuery().Include("BookingRentals").FirstOrDefault(be => be.Id == booking.Id);
+            var bookingRentalEntities = _context.BookingRentals.Include(br => br.Rental).Where(br => br.BookingId == booking.Id).ToList();
+            var bookingRentals = booking.BookingRentals;
+
+            foreach (var bookingRentalEntity in bookingRentals)
             {
-                var rentalEntity = _context.Set<RentalModel>().Find(rental.Id);
-                if (rentalEntity != null)
-                    rentals.Add(rentalEntity);
-                else
-                    rentals.Add(_context.Set<RentalModel>().Add(rental).Entity);
+                var bookingRental = bookingRentals.FirstOrDefault(br => br.RentalId == bookingRentalEntity.RentalId);
+                if (bookingRental == null)
+                {
+                    _context.BookingRentals.Remove(bookingRentalEntity);
+                    _context.Entry(bookingRentalEntity).State = EntityState.Deleted;
+                }
             }
-            booking.Rentals = rentals.Distinct().ToList();
-            _db.Update(booking);
+
+            var newBookingRentals = new List<BookingRentalModel>();
+
+            foreach (var bookingRental in bookingRentals)
+            {
+                var bookingRentalEntity = bookingRentalEntities.FirstOrDefault(bre => bre.RentalId == bookingRental.RentalId);
+                if (bookingRentalEntity == null)
+                {
+                    var rental = _context.Set<RentalModel>().AsNoTracking().FirstOrDefault(r => r.Id == bookingRental.RentalId);
+                    if (rental == null)
+                    {
+                        var newRental = _context.Add(new RentalModel { Id = bookingRental.RentalId }).Entity;
+                        bookingRental.Rental = newRental;
+                    }
+                    newBookingRentals.Add(bookingRental);
+                }
+                else
+                {
+                    newBookingRentals.Add(bookingRentalEntity);
+                }
+            }
+
+            bookingEnity.BookingRentals = newBookingRentals;
+            _db.Update(bookingEnity);
         }
     }
 }

@@ -10,6 +10,8 @@ namespace RVTR.Booking.ObjectModel.Models
     [Required]
     public int Id { get; set; }
 
+    public IEnumerable<BookingRentalModel> BookingRentals { get; set; }
+
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => new List<ValidationResult>();
   }
 }

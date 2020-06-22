@@ -10,29 +10,18 @@ namespace RVTR.Booking.DataContext
     /// </summary>
     public class StaySearchFilter : SearchFilter<StayModel>
     {
-        private DateTime _checkIn;
         /// <summary>
         /// Specifies the constraint to search for Stays after this date
         /// </summary>
         /// <value></value>
-        public virtual DateTime CheckIn
-        {
-            get { return _checkIn; }
-            set { _checkIn = value; }
-        }
+        public virtual DateTime CheckIn { get; set; }
 
-
-        private DateTime _checkOut;
         /// <summary>
         /// Specifies the constraignt to search for Stays before this date
         /// </summary>
         /// <value></value>
-        public virtual DateTime CheckOut
-        {
-            get { return _checkOut; }
-            set { _checkOut = value; }
-        }
-
+        public virtual DateTime CheckOut { get; set; }
+        
         /// <summary>
         /// Constraint to filter Stays with this Id for the `LodgingModel` entity.
         /// </summary>
@@ -51,9 +40,7 @@ namespace RVTR.Booking.DataContext
         /// Filter model for defining properties
         /// used to filter, sort and paginate Stays
         /// </summary>
-        /// <param name="staySearchQueries">
-        ///
-        /// </param>
+        /// <param name="staySearchQueries"></param>
         /// <returns></returns>
         public StaySearchFilter(StaySearchQueries staySearchQueries) : base(staySearchQueries)
         {
@@ -74,7 +61,7 @@ namespace RVTR.Booking.DataContext
         /// <param name="dateString">
         /// String used to determine the date range used
         /// </param>
-        public virtual void CreateDateFilter(string dateString)
+        public void CreateDateFilter(string dateString)
         {
             if (String.IsNullOrEmpty(dateString))
                 return;
@@ -107,7 +94,7 @@ namespace RVTR.Booking.DataContext
         /// ```
         /// </summary>
         /// <param name="lodgingIdString">The provided id of the Lodging record</param>
-        public virtual void CreateLodgingIdFilter(string lodgingIdString)
+        public void CreateLodgingIdFilter(string lodgingIdString)
         {
             int lodgingId;
             if (!Int32.TryParse(lodgingIdString, out lodgingId))

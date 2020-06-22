@@ -75,7 +75,7 @@ namespace RVTR.Booking.DataContext.Repositories
         /// <param name="offset">Number for skip</param>
         /// <param name="limit">Number for take</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", int offset = 0, int limit = 50)
+        public virtual async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", int offset = 0, int limit = 50)
         {
             var searchFilter = new SearchFilter<TEntity>()
             {
@@ -123,7 +123,10 @@ namespace RVTR.Booking.DataContext.Repositories
                 if (!String.IsNullOrEmpty(searchFilter.StringFilter))
                     query = query.Where(searchFilter.StringFilter);
             }
-            catch (ParseException) { }
+            catch
+            {
+                // Catches parse exceptions.
+            }
 
             // Order By, Skip, Take.
             try
@@ -131,7 +134,10 @@ namespace RVTR.Booking.DataContext.Repositories
                 if (searchFilter.OrderBy != null)
                     return await searchFilter.OrderBy(query).Skip(searchFilter.Offset).Take(searchFilter.Limit).ToListAsync();
             }
-            catch (ParseException) { }
+            catch
+            {
+                // Catches parse exceptions.
+            }
 
             return await query.OrderBy(e => e).Skip(searchFilter.Offset).Take(searchFilter.Limit).ToListAsync();
         }

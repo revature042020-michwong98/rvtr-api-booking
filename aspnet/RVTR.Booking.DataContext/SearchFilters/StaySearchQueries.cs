@@ -14,12 +14,7 @@ namespace RVTR.Booking.DataContext
         /// ?dates=yyyy-MM-dd to yyyy-MM-dd
         /// ```
         /// </summary>
-        private string _dates;
-        public virtual string Dates
-        {
-            get { return _dates; }
-            set { _dates = value; }
-        }
+        public virtual string Dates { get; set; }
 
         /// <summary>
         /// Query used to find Stays that include this Lodging Id
@@ -29,16 +24,7 @@ namespace RVTR.Booking.DataContext
         /// ?lodgingId=1
         /// ```
         /// </summary>
-        private string _lodgingId;
-        public string LodgingId
-        {
-            get { return _lodgingId; }
-            set { _lodgingId = value; }
-        }
+        public string LodgingId { get; set; }
 
     }
 }
-
-
-
-// ?during=yyyy-MM-dd to yyyy-MM-dd

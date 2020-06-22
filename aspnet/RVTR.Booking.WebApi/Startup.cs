@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,108 +10,107 @@ using RVTR.Booking.DataContext;
 using RVTR.Booking.DataContext.Repositories;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using zipkin4net.Middleware;
-using Newtonsoft.Json;
 
 namespace RVTR.Booking.WebApi
 {
-  /// <summary>
-  ///
-  /// </summary>
-  public class Startup
-  {
     /// <summary>
     ///
     /// </summary>
-    /// <value></value>
-    private readonly IConfiguration _configuration;
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="configuration"></param>
-    public Startup(IConfiguration configuration)
+    public class Startup
     {
-      _configuration = configuration;
-    }
+        /// <summary>
+        ///
+        /// </summary>
+        /// <value></value>
+        private readonly IConfiguration _configuration;
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="services"></param>
-    public void ConfigureServices(IServiceCollection services)
-    {
-      services.AddApiVersioning(options =>
-      {
-        options.ReportApiVersions = true;
-      });
-
-      services.AddControllers()
-        .AddNewtonsoftJson(options => 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="configuration"></param>
+        public Startup(IConfiguration configuration)
         {
-          options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-          options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-          options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
-        });
-
-      services.AddCors(options =>
-      {
-        options.AddPolicy("Public", policy =>
-        {
-          policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-        });
-      });
-
-      services.AddDbContext<BookingContext>(options =>
-      {
-        options.UseNpgsql(_configuration.GetConnectionString("pgsql"), options =>
-        {
-          options.EnableRetryOnFailure(3);
-        });
-      });
-
-      services.AddScoped<ClientZipkinMiddleware>();
-      services.AddScoped<UnitOfWork>();
-      services.AddSwaggerGen();
-      services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ClientSwaggerOptions>();
-      services.AddVersionedApiExplorer(options =>
-      {
-        options.GroupNameFormat = "'v'V";
-        options.SubstituteApiVersionInUrl = true;
-      });
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="applicationBuilder"></param>
-    /// <param name="descriptionProvider"></param>
-    /// <param name="hostEnvironment"></param>
-    public void Configure(IApplicationBuilder applicationBuilder, IApiVersionDescriptionProvider descriptionProvider, IWebHostEnvironment hostEnvironment)
-    {
-      if (hostEnvironment.IsDevelopment())
-      {
-        applicationBuilder.UseDeveloperExceptionPage();
-      }
-
-      applicationBuilder.UseZipkin();
-      applicationBuilder.UseTracing("bookingapi.rest");
-      applicationBuilder.UseHttpsRedirection();
-      applicationBuilder.UseRouting();
-      applicationBuilder.UseSwagger();
-      applicationBuilder.UseSwaggerUI(options =>
-      {
-        foreach (var description in descriptionProvider.ApiVersionDescriptions)
-        {
-          options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
+            _configuration = configuration;
         }
-      });
 
-      applicationBuilder.UseCors();
-      applicationBuilder.UseAuthorization();
-      applicationBuilder.UseEndpoints(endpoints =>
-      {
-        endpoints.MapControllers();
-      });
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="services"></param>
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+            });
+
+            services.AddControllers()
+              .AddNewtonsoftJson(options =>
+              {
+                  options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                  options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                  options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
+              });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Public", policy =>
+          {
+                  policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+              });
+            });
+
+            services.AddDbContext<BookingContext>(options =>
+            {
+                options.UseNpgsql(_configuration.GetConnectionString("pgsql"), options =>
+          {
+                  options.EnableRetryOnFailure(3);
+              });
+            });
+
+            services.AddScoped<ClientZipkinMiddleware>();
+            services.AddScoped<UnitOfWork>();
+            services.AddSwaggerGen();
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ClientSwaggerOptions>();
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'V";
+                options.SubstituteApiVersionInUrl = true;
+            });
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="applicationBuilder"></param>
+        /// <param name="descriptionProvider"></param>
+        /// <param name="hostEnvironment"></param>
+        public void Configure(IApplicationBuilder applicationBuilder, IApiVersionDescriptionProvider descriptionProvider, IWebHostEnvironment hostEnvironment)
+        {
+            if (hostEnvironment.IsDevelopment())
+            {
+                applicationBuilder.UseDeveloperExceptionPage();
+            }
+
+            applicationBuilder.UseZipkin();
+            applicationBuilder.UseTracing("bookingapi.rest");
+            applicationBuilder.UseHttpsRedirection();
+            applicationBuilder.UseRouting();
+            applicationBuilder.UseSwagger();
+            applicationBuilder.UseSwaggerUI(options =>
+            {
+                foreach (var description in descriptionProvider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
+                }
+            });
+
+            applicationBuilder.UseCors();
+            applicationBuilder.UseAuthorization();
+            applicationBuilder.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
     }
-  }
 }

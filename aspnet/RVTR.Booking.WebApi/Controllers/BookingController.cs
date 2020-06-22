@@ -10,7 +10,9 @@ using RVTR.Booking.DataContext;
 namespace RVTR.Booking.WebApi.Controllers
 {
     /// <summary>
-    ///
+    /// The controller layer for the `BookingModel.  Provided are HTTP endpoints
+    /// for handing calls to the server and determining how to perform
+    /// CRUD operations and data to send back to the client.
     /// </summary>
     [ApiController]
     [ApiVersion("0.0")]
